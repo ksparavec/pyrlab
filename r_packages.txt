@@ -1,0 +1,7 @@
+repr
+IRkernel
+devtools
+plotly
+ggplot2
+tidyr
+dplyr
