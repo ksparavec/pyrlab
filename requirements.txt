@@ -22,6 +22,7 @@ plotly
 pydot
 pyfolio-reloaded
 pytz
+QuantLib
 QuantStats
 requests
 scikit-learn
