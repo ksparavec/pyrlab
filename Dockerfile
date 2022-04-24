@@ -67,7 +67,7 @@ USER ${USER}
 
 WORKDIR ${HOMEDIR}
 
-COPY --chown=${USER}:${USER} requirements.txt r_packages.txt compress.sh uncompress.sh ./
+COPY --chown=${USER}:${USER} requirements.txt r_packages.txt ./
 
 # install non-system Python modules and further R packages
 RUN set -eux; \
@@ -89,12 +89,11 @@ RUN set -eux; \
     export PATH=${HOMEDIR}/.local/bin:${PATH}; \
     r -e 'IRkernel::installspec()'; \
     rm -rf /tmp/downloaded_packages/ /tmp/*.rds; \
-    ./compress.sh; \
     mkdir -p -m 0755 ${FILES} ${HOME}/.local/bin
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 
-CMD cd ${HOMEDIR} && ./uncompress.sh && cd ${FILES} && jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0
+CMD cd ${HOMEDIR} && cd ${FILES} && jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0
 
 
 # pyrlab slim runtime
@@ -155,7 +154,7 @@ USER ${USER}
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 
-CMD cd ${HOMEDIR} && ./uncompress.sh && cd ${FILES} && jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0
+CMD cd ${HOMEDIR} && cd ${FILES} && jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0
 
 
 # pyrlab with latex support
@@ -189,5 +188,5 @@ USER ${USER}
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 
-CMD cd ${HOMEDIR} && ./uncompress.sh && cd ${FILES} && jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0
+CMD cd ${HOMEDIR} && cd ${FILES} && jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0
 
