@@ -55,18 +55,16 @@ Many hundreds of lines and several minutes later (depending on how fast/slow you
 
 ```
 $ docker image ls | grep pyrlab
-pyrlab-latex              latest              b8f64b3c9a0d   2 hours ago    1.5GB
-pyrlab-slim               latest              32f27ebd2439   2 hours ago    957MB
-pyrlab-build              latest              fe4060bf6672   2 hours ago    1.81GB
+pyrlab-latex        latest               dd595dc9b8ed   2 minutes ago   6.12GB
+pyrlab-slim         latest               6040a5a4ee3e   4 minutes ago   5.57GB
+pyrlab-build        latest               81b751409746   7 minutes ago   5.67GB
 ```
 
-**pyrlab-slim** image is complete run time image with all custom Python and R modules, but without development tools. Python and R modules are stored in highly compressed tarballs so that total size of Docker image is still under 1 GB. These tarballs get automatically uncompressed before starting Jupyter Lab at runtime - this is the reason you need to wait a bit. Note that "slim" is a relative term here - Jupyter Lab requires lots of support software packages to run properly, and R distribution is not that small either. Custom Python and R modules do get compressed, but even these highly compressed tarballs still take more than half of total Docker image size with distributed extra Python modules list.
+**pyrlab-slim** image is complete run time image with all custom Python and R modules, but without development tools. Note that "slim" is a relative term here - Jupyter Lab requires lots of support software packages to run properly, and R distribution is not that small either. Of course, best way to reduce image size is to remove Python modules you don't need from requirements.txt and/or R modules from r_packages.txt.
 
 **pyrlab-latex** is the same as **pyrlab-slim**, but with LaTeX support for Jupyter notebooks.
 
-**pyrlab-build** image has all development tools installed and is used to fetch/compile/install new Python and R packages from remote repositories and compress them. If you use Python C/C++ extensions like Cython, you will need to load this image instead of **pyrlab-slim** or **pyrlab-latex** to compile your extensions before using them. It is recommended to keep your extensions together with notebooks in external directory which is also local copy of your git repository so you can track changes in your notebooks and software properly. See References section below for more information how to use git, if for some reason you are not familiar with it.
-
-Please note that using this image for Jupyter Lab containers is definitely not recommended on remote server systems, especially if they are available to general public, because of possible security risks. See notes on security below as well.
+**pyrlab-build** image has all development tools installed and is used to fetch/compile/install new Python and R packages from remote repositories. If you use Python C/C++ extensions like Cython, you will need to load this image instead of **pyrlab-slim** or **pyrlab-latex** to compile your extensions before using them. It is recommended to keep your extensions together with notebooks in external directory which is also local copy of your git repository so you can track changes in your notebooks and software properly. See References section below for more information how to use git, if for some reason you are not familiar with it.
 
 
 ## Customization 
@@ -107,33 +105,31 @@ If you point MY_NOTEBOOK_REPOSITORY to non-existent directory on Docker host sys
 
 Now, just execute Docker command above. This will start new container instance running on localhost:port specified. Exact URL for your browser is shown at the end of the Docker logs. You just need to copy paste it into your browser address input line. Container remains in foreground and keeps your terminal locked.
 
-If you don't want this behavior, there is one Makefile target that starts container in background, waits 60 seconds, and then picks the correct URL from Docker logs and executes browser on your machine in single step:
+If you don't want this behavior, there is one Makefile target that starts container in background, waits few seconds, and then picks the correct URL from Docker logs and executes browser on your machine in single step:
 
 ```
 $ make lab
 ```
 
-Please note that start will take (at least) 60 seconds because module images must be uncompressed first. In case that you get an error, this probably means that your machine needs more than 60 seconds to uncompress and start Jupyter Lab. In this case, you can increase number of seconds, I have not found any nice and simple way how to wait for Docker container to start if put into background and execute browser command afterwards. If you have it, please let me know about it.
-
-You can change default parameter values defined at the top of Makefile for Docker image, port, notebook directory and wait time by adding parameters to command above. For example, to start container based on **pyrlab-slim** image with listener on port 9346, with notebooks stored under ~/workdir and reduce wait time to 45 seconds, if your machine is at least as fast as mine, type:
+You can change default parameter values defined at the top of Makefile for Docker image, port, notebook directory and wait time by adding parameters to command above. For example, to start container based on **pyrlab-slim** image with listener on port 9346, with notebooks stored under ~/workdir, type:
 
 ```
-$ make lab IMAGE=pyrlab-slim PORT=9346 FILES=~/workdir PAUSE=45
+$ make lab IMAGE=pyrlab-slim PORT=9346 FILES=~/workdir
 ```
 
-This will produce output similar to this one and fire your browser 45 seconds later:
+This will produce output similar to this one and fire your browser:
 
 ```
 docker run -it --rm -v /home/user/workdir:/notebook/files -e PORT=9346 -p 9346:9346 -d pyrlab-slim
 8519010aad8f5c88c71c4d451eab239584f29c422b95747879c16e571c88d03d
-sleep 45
+sleep 3
 python3 -m webbrowser -t http://127.0.0.1:9346/lab?token=9369873c0aeee047593763d1351622aaff13e71df1265776
 
 ```
 
-If you hate waiting 45 seconds for modules tarballs to uncompress each time you start new container instance and don't care about Docker image sizes, i.e. want to trade size for speed, just remove single line from Dockerfile (search for `./compress.sh; \` in single line and remove it). You can then reduce PAUSE parameter to something like 3 seconds or even less.
+If you use remote server system, then http link echoed by Docker will obviously not work, because it contains localhost as IP. You will need to replace it with your real host IP and make sure you can access it on port specified from your workstation. You may need to open some port on your firewall or do some port redirection with ssh or even create full tunnel to your server system. 
 
-If you use remote server system, then http link echoed by Docker will obviously not work, because it contains localhost as IP. You will need to replace it with your real host IP and make sure you can access it on port specified from your workstation. You may need to open some port on your firewall or do some port redirection with ssh or even create full tunnel to your server system. How to do any of that is beyond the scope of this document. Contact your friendly system and network administrator for help. Same remark goes for typical corporate environments where direct Internet access is either forbidden or mandated through some proprietary external proxy that you don't have access to. Support for in-container proxy to do local caching is a planned feature though. It may also enable using of external proxies that require user authentication. Stay tuned!
+Planned features include adding support for corporate proxies, local caching of repository packages so they don't need to be downloaded each time you want to rebuild your containers, frontend proxy with certificates so you can access your containers on remote infrastructure securely, adding support for starting and running containers in parallel on remote infrastructure. Stay tuned!
 
 
 ## Testing of new modules before building new image
@@ -144,13 +140,7 @@ You can manually load and test modules before building images. For this purpose 
 $ make bash
 ```
 
-This will start new container instance based on pyrlab-build image and spawn new bash shell for you. First thing to do inside container is to manually uncompress the custom Python and R module tarballs:
-
-```
-notebook@e0a35c8c449d:~$ ./uncompress.sh
-```
-
-After that, you can work with pip and python as usual. For example:
+This will start new container instance based on pyrlab-build image and spawn new bash shell for you. Now, you can work with pip and python as usual. For example:
 
 ```
 notebook@e0a35c8c449d:~$ pip list
@@ -177,21 +167,6 @@ OK, OK, I know that last Python example is a bit of stretch, but I could not res
 Note that you have to use **--user** option with pip. Also note that modules will be installed in temporary container image which will be discarded after container termination.
 
 You can do the same in your Jupyter Lab web interface using Terminal App from Launcher. I prefer working in classical terminal instead of browser when typing commands. YMMV, of course :)
-
-
-## Notes on security
-
-Docker, in general, does not provide or provision any kind of security policies automatically for you. This means that you need to take care about them. As long as you use it on your local workstation with localhost links, this does not present much of the issue (at least not more than you already have). If you decide to use Jupyter Lab on remote server machines, you need to take some measures to reduce potential security risks:
-
-1. Always use authentication, either by token or user/password with Jupyter Lab instances,
-
-2. Don't start Jupyter Lab containers on remote server machines based on **pyrlab-build** image because it contains C compiler and linker among other things,
-
-3. Make sure that access to remote container is protected by proper firewall rules,
-
-4. Restrict direct Internet access to links/domains from your container instance to those that you really need. This can be done with the help of an external Web Application Proxy. Ask your friendly network administrator for help if you need it. Please note that you will have to define this proxy in your Python session first in order to access external links (for example Yahoo Finance portal to get financial data for analysis). See documentation for your Python module for details,
-
-5. Use your common sense (good thing to do in general, not only when it comes to security).
 
 
 ## Where to find more information
