@@ -1,0 +1,11 @@
+FROM debian:bullseye
+
+WORKDIR /
+
+COPY debian_packages.txt apt_repo.sh ./
+
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends dpkg-dev
+
+ENTRYPOINT [ "/bin/bash", "/apt_repo.sh", "/debian_packages.txt", "/repository" ]

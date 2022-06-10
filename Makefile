@@ -1,7 +1,7 @@
 IMAGE := pyrlab-latex
 PORT  := 8888
 FILES := ${HOME}/notebooks
-PAUSE := 60
+PAUSE := 3
 
 .PHONY: all clean build bash start browser lab stop list pause
 all: build start pause browser

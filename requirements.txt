@@ -5,6 +5,7 @@ Cython
 datetime
 dill
 graphviz
+gym
 h5py
 ipywidgets
 jupyter
@@ -14,6 +15,7 @@ keras-tuner
 matplotlib
 MiniSom
 missingno
+mlflow
 networkx
 numpy
 pandas
@@ -34,6 +36,7 @@ sympy
 tabulate
 tensorboard
 tensorflow
+torch
 xgboost
 xlrd
 yfinance

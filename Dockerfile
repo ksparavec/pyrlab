@@ -15,6 +15,7 @@ RUN set -eux; \
             less \
             locales \
             vim \
+            git \
             tini \
             cmake \
             curl \
@@ -151,6 +152,9 @@ COPY --from=pyrlab-build ${HOMEDIR} ${HOMEDIR}
 COPY --from=pyrlab-build /usr/local/lib/R /usr/local/lib/R
 
 USER ${USER}
+
+# Add spreadsheet view functionality
+RUN jupyter labextension install jupyterlab-spreadsheet
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 
