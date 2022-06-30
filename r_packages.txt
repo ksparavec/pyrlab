@@ -5,3 +5,6 @@ plotly
 ggplot2
 tidyr
 dplyr
+quantmod
+zoo
+urca
