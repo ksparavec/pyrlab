@@ -4,6 +4,7 @@ cvxpy
 Cython
 datetime
 dill
+ffmpeg
 graphviz
 gym
 h5py
