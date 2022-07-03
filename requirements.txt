@@ -25,6 +25,7 @@ plotly
 pydot
 pyfolio-reloaded
 pytz
+quandl
 QuantLib
 QuantStats
 requests
