@@ -5,6 +5,7 @@ Cython
 datetime
 dill
 ffmpeg
+fredapi
 graphviz
 gym
 h5py

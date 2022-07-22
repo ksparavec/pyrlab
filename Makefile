@@ -20,7 +20,7 @@ bash:
 	docker run -it --rm -v ${FILES}:/notebook/files pyrlab-build bash --login
 
 start:
-	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${PORT} -p ${PORT}:${PORT} -d ${IMAGE}
+	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${PORT} -p ${PORT}:${PORT} -p 6006:6006 -d ${IMAGE}
 
 browser:
 	python3 -m webbrowser -t $(shell docker logs `docker container ls -l -q` | grep -E "^\s+or http" | awk '{print $$2}')
