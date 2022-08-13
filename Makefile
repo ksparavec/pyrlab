@@ -9,15 +9,13 @@ lab: start pause browser
 
 clean:
 	docker image prune --force
-	docker image rm ${IMAGE} pyrlab-slim pyrlab-build
+	docker image rm ${IMAGE} pyrlab
 
 build:
-	docker build --target pyrlab-build -t pyrlab-build:latest .
-	docker build --target pyrlab-slim  -t pyrlab-slim:latest .
-	docker build --target pyrlab-latex -t pyrlab-latex:latest .
+	docker build --target pyrlab -t pyrlab:latest .
 
 bash:
-	docker run -it --rm -v ${FILES}:/notebook/files pyrlab-build bash --login
+	docker run -it --rm -v ${FILES}:/notebook/files pyrlab bash --login
 
 start:
 	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${PORT} -p ${PORT}:${PORT} -p 6006:6006 -d ${IMAGE}
