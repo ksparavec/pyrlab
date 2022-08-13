@@ -1,4 +1,4 @@
-IMAGE := pyrlab-latex
+IMAGE := pyrlab
 PORT  := 8888
 FILES := ${HOME}/notebooks
 PAUSE := 3
