@@ -1,0 +1,20 @@
+FROM python:3.9-bullseye
+
+ENV USER=notebook
+ENV HOMEDIR=/notebook
+ENV FILES=${HOMEDIR}/files
+
+SHELL [ "/bin/bash", "-l", "-c" ]
+
+COPY base_debs.txt ./
+
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends `cat base_debs.txt`; \
+    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+    rm -rf /var/lib/apt/lists/*; \
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen; \
+    locale-gen en_US.utf8; \
+    update-locale LANG=en_US.UTF-8; \
+    useradd -U ${USER} -m -d ${HOMEDIR} -s /bin/bash
+

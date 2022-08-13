@@ -1,0 +1,30 @@
+FROM pyrlab-base
+
+ENV PORT=8888
+
+USER ${USER}
+
+WORKDIR ${HOMEDIR}
+
+COPY --chown=${USER}:${USER} requirements.txt ./
+
+# install non-system Python modules
+RUN set -eux; \
+    export PYTHONDONTWRITEBYTECODE=1; \
+    pip install \
+        --no-warn-script-location \
+        --disable-pip-version-check \
+        --no-cache-dir \
+        --no-compile \
+        --user \
+        -r requirements.txt; \
+    export PATH=${HOMEDIR}/.local/bin:${PATH}; \
+    mkdir -p -m 0755 ${FILES} ${HOME}/.local/bin
+
+# Add spreadsheet view functionality
+RUN jupyter labextension install jupyterlab-spreadsheet
+
+ENTRYPOINT [ "/usr/bin/tini", "--" ]
+
+CMD cd ${HOMEDIR} && cd ${FILES} && jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0
+

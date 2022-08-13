@@ -51,122 +51,66 @@ $ make build
 ...
 ```
 
-Many hundreds of lines and several minutes later (depending on how fast/slow your hardware and Internet connection are), you will obtain three Docker images as follows:
+Thousands of lines and several minutes later (depending on how fast/slow your hardware and Internet connection are), you will obtain four Docker images (if you have some other unrelated images with lab in their names, please ignore them):
 
 ```
-$ docker image ls | grep pyrlab
-pyrlab-latex        latest               dd595dc9b8ed   2 minutes ago   6.12GB
-pyrlab-slim         latest               6040a5a4ee3e   4 minutes ago   5.57GB
-pyrlab-build        latest               81b751409746   7 minutes ago   5.67GB
+$ docker image ls | grep lab
+rlab                    latest          eca0464b8954   36 minutes ago   3.08GB
+rlab-base               latest          017d55bc3964   44 minutes ago   1.84GB
+pylab                   latest          56678e3118cf   2 hours ago      6.79GB
+pyrlab-base             latest          d90e81da4fd5   2 hours ago      1.69GB
 ```
 
-**pyrlab-slim** image is complete run time image with all custom Python and R modules, but without development tools. Note that "slim" is a relative term here - Jupyter Lab requires lots of support software packages to run properly, and R distribution is not that small either. Of course, best way to reduce image size is to remove Python modules you don't need from requirements.txt and/or R modules from r_packages.txt.
 
-**pyrlab-latex** is the same as **pyrlab-slim**, but with LaTeX support for Jupyter notebooks.
+**pyrlab-base** image contains all necessary system libraries and packages to run Python. You can't create container from this image. Its only purpose is to be used as base image for building **pylab** and **rlab-base** images.
 
-**pyrlab-build** image has all development tools installed and is used to fetch/compile/install new Python and R packages from remote repositories. If you use Python C/C++ extensions like Cython, you will need to load this image instead of **pyrlab-slim** or **pyrlab-latex** to compile your extensions before using them. It is recommended to keep your extensions together with notebooks in external directory which is also local copy of your git repository so you can track changes in your notebooks and software properly. See References section below for more information how to use git, if for some reason you are not familiar with it.
+**pylab** image is final image that contains all custom Python modules to run Python notebooks with **Python** kernel.
+
+**rlab-base** image contains all necessary system libraries and packages to run R. You can't create container from this image. Its only purpose is to be used as base image for building **rlab** image.
+
+**rlab** image is final image that contains all custom R modules and necessary Python modules to run Python notebooks with **R** kernel.
 
 
 ## Customization 
 
-Please check **requirements.txt** and **r_packages.txt** for the list of included Python and R modules/packages and edit according to your needs. You are advised to remove any unneeded modules from **requirements.txt**. List distributed with project is geared towards engineers and scientists that need tools for numerical analysis and machine learning (not accidentally the areas that I am currently actively involved with). YMMV, of course.
+Please check following configuration files for customization of packages and modules:
 
-After editing, you will have to rebuild all three images:
+* **base_debs.txt** : you can add Debian packages here if necessary to build custom Python modules
+* **requirements.txt** : add here any other **Python** modules you need in your project
+* **r_debs.txt** : you can add Debian packages here if necessary to build custom R modules
+* **r_packages.txt** : add here any other **R** modules you need in your project
+
+After editing, you will have to rebuild images:
+
+```
+$ make build
+```
+
+Docker should be able to figure out which images have to be rebuilt automatically and rebuild only those. If you want to be sure nothing stale remains, execute make with clean target before building:
 
 ```
 $ make clean
-...
 $ make build
-...
 ```
-
-First command will wipe old pyrlab images if present, and second one will rebuild them from scratch.
 
 
 ## Usage
 
-After build process has finished successfully, you can start your new container in the following way:
+After build process has finished successfully, you can start your new containers and point browser to them in the following way:
 
 ```
-$ docker run -it --rm -v ${MY_NOTEBOOK_REPOSITORY}:/notebook/files -e PORT=${PORT} -p ${PORT}:${PORT} ${IMAGE}
+$ make pylab
+$ make rlab IMAGE=rlab PORT=9999
 ```
 
-You need to replace MY_NOTEBOOK_REPOSITORY, PORT, and IMAGE with actual values. For example, if you use bash, you could do:
+If you use remote server system, then http link echoed by Docker will obviously not work, because it contains localhost as IP. You will need to replace it with your real host IP and make sure you can access it on port specified from your workstation. You may need to open some port on your firewall or do some port redirection with ssh or even create full tunnel to your server system. Instead of pylab and rlab, use start_pylab and start_rlab targets just to start containers without browser.
 
-```
-$ export MY_NOTEBOOK_REPOSITORY=$HOME/notebooks
-$ export PORT=9000
-$ export IMAGE=pyrlab-latex
-```
-
-Important: MY_NOTEBOOK_REPOSITORY must exist and be writable directory on the local system available to docker daemon (usually your workstation, but not necessarily). If you use Makefile targets, make sure that you have it defined properly on top of Makefile (FILES parameter).
-
-If you point MY_NOTEBOOK_REPOSITORY to non-existent directory on Docker host system, Docker will create it itself, but unfortunately with wrong permissions (see link below for detailed discussion why). This is not what you want, so please make sure that this directory really exists and has correct permissions **before** starting your container. See note below in References section for more information.
-
-Now, just execute Docker command above. This will start new container instance running on localhost:port specified. Exact URL for your browser is shown at the end of the Docker logs. You just need to copy paste it into your browser address input line. Container remains in foreground and keeps your terminal locked.
-
-If you don't want this behavior, there is one Makefile target that starts container in background, waits few seconds, and then picks the correct URL from Docker logs and executes browser on your machine in single step:
-
-```
-$ make lab
-```
-
-You can change default parameter values defined at the top of Makefile for Docker image, port, notebook directory and wait time by adding parameters to command above. For example, to start container based on **pyrlab-slim** image with listener on port 9346, with notebooks stored under ~/workdir, type:
-
-```
-$ make lab IMAGE=pyrlab-slim PORT=9346 FILES=~/workdir
-```
-
-This will produce output similar to this one and fire your browser:
-
-```
-docker run -it --rm -v /home/user/workdir:/notebook/files -e PORT=9346 -p 9346:9346 -d pyrlab-slim
-8519010aad8f5c88c71c4d451eab239584f29c422b95747879c16e571c88d03d
-sleep 3
-python3 -m webbrowser -t http://127.0.0.1:9346/lab?token=9369873c0aeee047593763d1351622aaff13e71df1265776
-
-```
-
-If you use remote server system, then http link echoed by Docker will obviously not work, because it contains localhost as IP. You will need to replace it with your real host IP and make sure you can access it on port specified from your workstation. You may need to open some port on your firewall or do some port redirection with ssh or even create full tunnel to your server system. 
-
-Planned features include adding support for corporate proxies, local caching of repository packages so they don't need to be downloaded each time you want to rebuild your containers, frontend proxy with certificates so you can access your containers on remote infrastructure securely, adding support for starting and running containers in parallel on remote infrastructure. Stay tuned!
+Please note that you must use different ports for pylab and rlab containers for obvious reasons. In case of rlab, you must specify both IMAGE and PORT parameters, otherwise defaults from Makefile will be taken, which is not what you want (defaults are suitable for pylab container).
 
 
-## Testing of new modules before building new image
+## Further work
 
-You can manually load and test modules before building images. For this purpose you can use:
-
-```
-$ make bash
-```
-
-This will start new container instance based on pyrlab-build image and spawn new bash shell for you. Now, you can work with pip and python as usual. For example:
-
-```
-notebook@e0a35c8c449d:~$ pip list
-...
-notebook@e0a35c8c449d:~$ pip install --user hg2g
-...
-notebook@e0a35c8c449d:~$ ipython
-Python 3.9.11 (main, Mar 17 2022, 00:56:40)
-Type 'copyright', 'credits' or 'license' for more information
-IPython 8.1.1 -- An enhanced Interactive Python. Type '?' for help.
-
-In [1]: from hg2g import *
-
-In [2]: answer = Deep_Thought.question("What is the Answer to Ultimate Question of Life, the Universe, and Everything???")
-
-(wait for couple of million years...)
-
-In [3]: print(answer)
-42
-```
-
-OK, OK, I know that last Python example is a bit of stretch, but I could not resist ;)
-
-Note that you have to use **--user** option with pip. Also note that modules will be installed in temporary container image which will be discarded after container termination.
-
-You can do the same in your Jupyter Lab web interface using Terminal App from Launcher. I prefer working in classical terminal instead of browser when typing commands. YMMV, of course :)
+Planned features include adding support for corporate proxies, frontend proxy with certificates so you can access your containers on remote infrastructure securely, adding support for starting and running containers in parallel on remote infrastructure. Stay tuned!
 
 
 ## Where to find more information

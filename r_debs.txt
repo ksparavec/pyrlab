@@ -1,0 +1,9 @@
+littler
+r-cran-docopt
+r-cran-littler
+r-base
+r-base-dev
+r-base-core
+r-recommended
+libharfbuzz-dev
+libfribidi-dev
