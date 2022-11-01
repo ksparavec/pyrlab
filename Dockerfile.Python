@@ -1,5 +1,7 @@
 FROM pyrlab-base
 
+ARG PIPPROXY
+ARG PIPHOST
 ENV PORT=8888
 
 USER ${USER}
@@ -11,13 +13,14 @@ COPY --chown=${USER}:${USER} requirements.txt ./
 # install non-system Python modules
 RUN set -eux; \
     export PYTHONDONTWRITEBYTECODE=1; \
+    [[ zzz${PIPPROXY} != zzz ]] && export USEPROXY="-i ${PIPPROXY}/root/pypi/+simple --trusted-host ${PIPHOST}"; \
     pip install \
         --no-warn-script-location \
         --disable-pip-version-check \
         --no-cache-dir \
         --no-compile \
         --user \
-        -r requirements.txt; \
+        ${USEPROXY} -r requirements.txt; \
     export PATH=${HOMEDIR}/.local/bin:${PATH}; \
     mkdir -p -m 0755 ${FILES} ${HOME}/.local/bin
 

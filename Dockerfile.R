@@ -1,5 +1,8 @@
 FROM rlab-base
 
+ARG APTPROXY
+ARG PIPPROXY
+ARG PIPHOST
 ENV PORT=9999
 
 USER ${USER}
@@ -11,13 +14,14 @@ COPY --chown=${USER}:${USER} r_requirements.txt ./
 # install non-system Python modules
 RUN set -eux; \
     export PYTHONDONTWRITEBYTECODE=1; \
+    [[ zzz${PIPPROXY} != zzz ]] && export USEPROXY="-i ${PIPPROXY}/root/pypi/+simple --trusted-host ${PIPHOST}"; \
     pip install \
         --no-warn-script-location \
         --disable-pip-version-check \
         --no-cache-dir \
         --no-compile \
         --user \
-        -r r_requirements.txt; \
+        ${USEPROXY} -r r_requirements.txt; \
     export PATH=${HOMEDIR}/.local/bin:${PATH}; \
     mkdir -p -m 0755 ${FILES} ${HOME}/.local/bin
 
@@ -28,6 +32,7 @@ COPY --chown=${USER}:${USER} r_packages.txt ./
 
 # install further R packages
 RUN set -eux; \
+    [[ zzz${APTPROXY} != zzz ]] && export http_proxy="${APTPROXY}"; \
     command="install.packages(c("; \
     while read package; do \
         command=${command}'"'${package}'",'; \

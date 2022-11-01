@@ -1,5 +1,6 @@
 FROM python:3.9-bullseye
 
+ARG APTPROXY
 ENV USER=notebook
 ENV HOMEDIR=/notebook
 ENV FILES=${HOMEDIR}/files
@@ -9,6 +10,7 @@ SHELL [ "/bin/bash", "-l", "-c" ]
 COPY base_debs.txt ./
 
 RUN set -eux; \
+    [[ zzz${APTPROXY} != zzz ]] && echo "Acquire::http::proxy \"${APTPROXY}\";" >/etc/apt/apt.conf.d/02proxy; \
     apt-get update; \
     apt-get install -y --no-install-recommends `cat base_debs.txt`; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
