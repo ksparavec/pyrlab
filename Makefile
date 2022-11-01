@@ -1,5 +1,7 @@
 IMAGE := pylab
+RIMAGE := rlab
 PORT  := 8888
+RPORT := 9999
 FILES := ${HOME}/notebooks
 PAUSE := 3
 
@@ -9,8 +11,8 @@ PIPHOST  := "192.168.0.109"
 
 .PHONY: all clean build build_base build_rbase build_python build_r bash start start_pylab start_rlab browser pylab rlab stop stop_pylab stop_rlab list pause
 build: build_base build_rbase build_python build_r
-start: start_pylab
-stop: stop_pylab
+start: start_pylab start_rlab
+stop: stop_pylab stop_rlab
 all: build start
 pylab: start_pylab pause browser
 rlab: start_rlab pause browser
@@ -38,13 +40,10 @@ start_pylab:
 	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${PORT} -p ${PORT}:${PORT} -p 6006:6006 -d ${IMAGE}
 
 start_rlab:
-	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${PORT} -p ${PORT}:${PORT} -d ${IMAGE}
+	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${RPORT} -p ${RPORT}:${RPORT} -d ${RIMAGE}
 
 browser:
 	python3 -m webbrowser -t $(shell docker logs `docker container ls -l -q` | grep -E "^\s+or http" | awk '{print $$2}')
-
-stop:
-	docker stop `docker ps -q --filter "ancestor=${IMAGE}"`
 
 stop_pylab:
 	docker stop `docker ps -q --filter "ancestor=pylab"`
