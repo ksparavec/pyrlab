@@ -5,9 +5,9 @@ RPORT := 9999
 FILES := ${HOME}/notebooks
 PAUSE := 3
 
-APTPROXY := "http://192.168.0.109:3142"
-PIPPROXY := "http://192.168.0.109:3141"
-PIPHOST  := "192.168.0.109"
+APTPROXY := "http://172.17.0.1:3142"
+PIPPROXY := "http://172.17.0.1:3141"
+PIPHOST  := "172.17.0.1"
 
 .PHONY: all clean build build_base build_rbase build_python build_r bash start start_pylab start_rlab browser pylab rlab stop stop_pylab stop_rlab list pause
 build: build_base build_rbase build_python build_r

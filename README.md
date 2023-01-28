@@ -33,6 +33,38 @@ Please note that, in order to add or remove your custom Python modules and R pac
 4. Reasonably fast Internet connection with low latency and unlimited traffic. Build process currently requires direct Internet connection or transparent proxy. Using explicitly configured proxies is currently not supported, but is a planned feature for future release.
 
 
+## Proxy Setup
+
+It is strongly recommended to use proxies for Debian packages and Python modules. In enterprise environments, point your proxy to values obtained from your administrator. If you have direct Internet access, you can easily create your own proxies on your laptop or workstation.
+
+Debian packages can be cached by using apt-proxy. If you use Debian as your Desktop OS, then execute as root:
+
+```
+# apt-get update && apt-get install apt-cacher-ng
+```
+
+You will get apt-proxy with package caching and meta information management listening on port 3142. In case you don't have Debian based desktop, you can use any standard proxy software like Squid for example. Just note the port your proxy is listening to.
+
+Python packages can be cached using devpi module. See this page for more information how to install devpi on your laptop/workstation:
+[Quickstart: running a pypi mirror on your laptop](https://devpi.net/docs/devpi/devpi/stable/+d/quickstart-pypimirror.html)
+
+After installation, you can start devpi proxy instance as follows (check your docker network interface configuration first to make sure you have docker proxy running on and listening on 172.17.0.1):
+
+```
+$ devpi-server --listen 172.17.0.1:3141
+```
+
+Once you have either installed your proxies or obtained proxy information from your administrator, enter the values into Makefile on top:
+
+```
+APTPROXY := "http://172.17.0.1:3142"
+PIPPROXY := "http://172.17.0.1:3141"
+PIPHOST  := "172.17.0.1"
+```
+
+In this example, I suppose that you use your own proxy software installed as shown above. If you don't have or don't want to use proxies, just comment or remove these three parameters from Makefile.
+
+
 ## Build your Docker images
 
 Just two simple steps are necessary:
@@ -96,21 +128,55 @@ $ make build
 
 ## Usage
 
+Create directory "notebooks" in your home directory to store your Python/R notebooks:
+
+```
+mkdir $HOME/notebooks
+```
+
+You may choose some other name for this directory, however, in this case you will have to modify FILES parameter in Makefile accordingly:
+
+```
+FILES := ${HOME}/my-own-notebooks
+```
+
 After build process has finished successfully, you can start your new containers and point browser to them in the following way:
 
 ```
 $ make pylab
-$ make rlab IMAGE=rlab PORT=9999
+$ make rlab
 ```
+
+You may specify PORT or RPORT parameter in command line as well if you don't want to use default values from Makefile. If you want to change default port values permanently, then edit parameters on top of Makefile:
+
+```
+PORT  := 8888
+RPORT := 9999
+```
+
+N.B. Port 6006 is reserved for use with TensorFlow console, you can't use it as PORT or RPORT.
 
 If you use remote server system, then http link echoed by Docker will obviously not work, because it contains localhost as IP. You will need to replace it with your real host IP and make sure you can access it on port specified from your workstation. You may need to open some port on your firewall or do some port redirection with ssh or even create full tunnel to your server system. Instead of pylab and rlab, use start_pylab and start_rlab targets just to start containers without browser.
 
-Please note that you must use different ports for pylab and rlab containers for obvious reasons. In case of rlab, you must specify both IMAGE and PORT parameters, otherwise defaults from Makefile will be taken, which is not what you want (defaults are suitable for pylab container).
+For example, let's suppose you have started your pylab instance on remote server with standard port 8888. Also let's suppose that remote server IP number is 192.168.1.100. In this case, in order to connect to remote instance from your workstation, you can use SSH port forwarding like this (this supposes that you use Linux, Unix or Mac OS as your Desktop OS):
 
+```
+$ ssh 192.168.1.100 -fN -L 8888:localhost:8888
+```
 
-## Further work
+If you have Windows installed on your desktop, you will have to check your ssh client documentation for information how to do port forwarding.
 
-Planned features include adding support for corporate proxies, frontend proxy with certificates so you can access your containers on remote infrastructure securely, adding support for starting and running containers in parallel on remote infrastructure. Stay tuned!
+Now, on remote server, execute following command to obtain full link to your instance that you have just started:
+
+```
+$ docker logs `docker container ls -l -q` | grep -E "^\s+or http" | awk '{print $2}'
+```
+
+Copy/paste this link into your browser and work just like you would with docker running locally.
+
+If you have direct access to remote server high ports via tunnel or directly, you still need some kind of port forwarding because listener always binds to localhost interface which is reachable from remote host only. In this case, you might want to use tools like `socat(1)` or `nc(1)` and then replace 127.0.0.1 with remote server IP in link echoed. Nevertheless, the easiest method is to just use ssh like shown above, even if high ports on remote server are reachable directly.
+
+In order to create your Docker instance available from Internet directly (similar to `https://nbviewer.org` for example), you would have to create reverse proxy in front of it and some additional software for user authentication, logging, separate notebook spaces etc. How to do this is obviously beyond the scope of this document.
 
 
 ## Where to find more information
