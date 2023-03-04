@@ -1,5 +1,4 @@
 arch
-chatgpt
 cufflinks
 cvxpy
 Cython
@@ -22,6 +21,7 @@ missingno
 mlflow
 networkx
 numpy
+openai
 pandas
 pandoc
 plotly
