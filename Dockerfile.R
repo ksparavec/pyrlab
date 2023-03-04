@@ -25,9 +25,6 @@ RUN set -eux; \
     export PATH=${HOMEDIR}/.local/bin:${PATH}; \
     mkdir -p -m 0755 ${FILES} ${HOME}/.local/bin
 
-# Add spreadsheet view functionality
-RUN jupyter labextension install jupyterlab-spreadsheet
-
 COPY --chown=${USER}:${USER} r_packages.txt ./
 
 # install further R packages

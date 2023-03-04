@@ -12,6 +12,7 @@ h5py
 ipywidgets
 jupyter
 jupyterlab
+jupyterlab-spreadsheet-editor
 keras
 keras-tuner
 matplotlib
@@ -38,7 +39,7 @@ statsmodels
 sympy
 tabulate
 tensorboard
-tensorflow
+tensorflow-cpu==2.11.*
 torch
 xgboost
 xlrd

@@ -24,9 +24,6 @@ RUN set -eux; \
     export PATH=${HOMEDIR}/.local/bin:${PATH}; \
     mkdir -p -m 0755 ${FILES} ${HOME}/.local/bin
 
-# Add spreadsheet view functionality
-RUN jupyter labextension install jupyterlab-spreadsheet
-
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 
 CMD cd ${HOMEDIR} && cd ${FILES} && jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0
