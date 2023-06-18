@@ -21,6 +21,7 @@ missingno
 mlflow
 networkx
 numpy
+numexpr
 openai
 pandas
 pandoc
