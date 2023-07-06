@@ -41,7 +41,7 @@ statsmodels
 sympy
 tabulate
 tensorboard
-tensorflow-cpu==2.11.*
+tensorflow-cpu
 torch
 xgboost
 xlrd
