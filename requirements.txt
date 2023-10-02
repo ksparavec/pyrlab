@@ -12,7 +12,7 @@ h5py
 ipywidgets
 jupyter
 jupyterlab
-jupyterlab-spreadsheet-editor
+jupyter_ai
 keras
 keras-tuner
 matplotlib

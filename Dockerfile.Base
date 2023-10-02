@@ -1,4 +1,5 @@
-FROM python:3.10-bullseye
+ARG PYTHONBASE
+FROM python:${PYTHONBASE}
 
 ARG APTPROXY
 ENV USER=notebook

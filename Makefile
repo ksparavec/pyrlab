@@ -2,6 +2,7 @@ IMAGE := pylab
 RIMAGE := rlab
 PORT  := 8888
 RPORT := 9999
+TFPORT := 6006
 FILES := ${HOME}/notebooks
 PAUSE := 3
 
@@ -14,36 +15,35 @@ build: build_base build_rbase build_python build_r
 start: start_pylab start_rlab
 stop: stop_pylab stop_rlab
 all: build start
-pylab: start_pylab pause browser
-rlab: start_rlab pause browser
 
 clean:
 	docker image prune --force
 	docker image rm pyrlab-base pylab rlab-base rlab
 
 build_base:
-	docker build -f Dockerfile.Base -t pyrlab-base:latest --build-arg APTPROXY=${APTPROXY} .
+	docker build -f Dockerfile.Base -t pyrlab-base:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} --progress=plain --no-cache .
+	docker image tag pyrlab-base:${PYTHONBASE} pyrlab-base:latest
 
 build_python:
-	docker build -f Dockerfile.Python -t pylab:latest --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} .
+	docker build -f Dockerfile.Python -t pylab:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} --progress=plain --no-cache .
+	docker image tag pylab:${PYTHONBASE} pylab:latest
 
 build_rbase:
-	docker build -f Dockerfile.RBase -t rlab-base:latest .
+	docker build -f Dockerfile.RBase -t rlab-base:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} .
+	docker image tag rlab-base:${PYTHONBASE} rlab-base:latest
 
 build_r:
-	docker build -f Dockerfile.R -t rlab:latest --build-arg APTPROXY=${APTPROXY} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} .
+	docker build -f Dockerfile.R -t rlab:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} .
+	docker image tag rlab:${PYTHONBASE} rlab:latest
 
 bash:
 	docker run -it --rm -v ${FILES}:/notebook/files pyrlab bash --login
 
 start_pylab:
-	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${PORT} -p ${PORT}:${PORT} -p 6006:6006 -d ${IMAGE}
+	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${PORT} -p ${PORT}:${PORT} -p ${TFPORT}:${TFPORT} -d ${IMAGE}
 
 start_rlab:
 	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${RPORT} -p ${RPORT}:${RPORT} -d ${RIMAGE}
-
-browser:
-	python3 -m webbrowser -t $(shell docker logs `docker container ls -l -q` | grep -E "^\s+or http" | awk '{print $$2}')
 
 stop_pylab:
 	docker stop `docker ps -q --filter "ancestor=pylab"`
@@ -53,7 +53,4 @@ stop_rlab:
 
 list:
 	docker ps --filter "ancestor=${IMAGE}"
-
-pause:
-	sleep ${PAUSE}
 

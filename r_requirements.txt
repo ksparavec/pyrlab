@@ -1,4 +1,3 @@
 ipywidgets
 jupyter
 jupyterlab
-jupyterlab-spreadsheet-editor
