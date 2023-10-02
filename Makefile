@@ -1,6 +1,7 @@
 IMAGE := pylab
 RIMAGE := rlab
 PORT  := 8888
+TFPORT := 6006
 RPORT := 9999
 FILES := ${HOME}/notebooks
 PAUSE := 3
@@ -35,14 +36,11 @@ build_r:
 	docker build -f Dockerfile.R -t rlab:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} .
 	docker image tag rlab:${PYTHONBASE} rlab:latest
 
-bash:
-	docker run -it --rm -v ${FILES}:/notebook/files pyrlab bash --login
-
 start_pylab:
-	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${PORT} -p ${PORT}:${PORT} -d ${IMAGE}
+	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${PORT} -p ${PORT}:${PORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -d ${IMAGE}:${PYTHONBASE}
 
 start_rlab:
-	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${RPORT} -p ${RPORT}:${RPORT} -d ${RIMAGE}
+	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${RPORT} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
 
 stop_pylab:
 	docker stop `docker ps -q --filter "ancestor=pylab"`
