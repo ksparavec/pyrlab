@@ -27,13 +27,9 @@ RUN set -eux; \
 
 # finalize image
 RUN set -eux; \
-    echo "#!/usr/bin/bash" >start.sh; \
-    echo ". ~/.bash_aliases" >>start.sh; \
-    echo "cd ${HOMEDIR} && cd ${FILES} && jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0" >>start.sh; \
-    chmod +x ./start.sh; \
     mkdir -p -m 0755 ${FILES} ${HOME}/.local/bin
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 
-CMD ./start.sh
+CMD cd ${HOMEDIR} && cd ${FILES} && jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0
 
