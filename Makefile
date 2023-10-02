@@ -21,11 +21,11 @@ clean:
 	docker image rm pyrlab-base pylab rlab-base rlab
 
 build_base:
-	docker build -f Dockerfile.Base -t pyrlab-base:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} --progress=plain --no-cache .
+	docker build -f Dockerfile.Base -t pyrlab-base:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} .
 	docker image tag pyrlab-base:${PYTHONBASE} pyrlab-base:latest
 
 build_python:
-	docker build -f Dockerfile.Python -t pylab:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} --progress=plain --no-cache .
+	docker build -f Dockerfile.Python -t pylab:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} .
 	docker image tag pylab:${PYTHONBASE} pylab:latest
 
 build_rbase:
