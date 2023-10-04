@@ -12,6 +12,8 @@ WORKDIR ${HOMEDIR}
 SHELL [ "/bin/bash", "-l", "-c" ]
 
 COPY --chown=${USER}:${USER} requirements.txt ./
+COPY --chown=${USER}:${USER} dot.vimrc ./.vimrc
+COPY --chown=${USER}:${USER} dot.bash_aliases ./.bash_aliases
 
 # install non-system Python modules
 RUN set -eux; \

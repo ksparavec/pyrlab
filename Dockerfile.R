@@ -11,6 +11,8 @@ USER ${USER}
 WORKDIR ${HOMEDIR}
 
 COPY --chown=${USER}:${USER} r_requirements.txt ./
+COPY --chown=${USER}:${USER} dot.vimrc ./.vimrc
+COPY --chown=${USER}:${USER} dot.bash_aliases ./.bash_aliases
 
 # install non-system Python modules
 RUN set -eux; \
