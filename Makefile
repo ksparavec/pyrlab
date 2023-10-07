@@ -1,20 +1,35 @@
-IMAGE := pylab
-RIMAGE := rlab
-PORT  := 8888
-TFPORT := 6006
-RPORT := 9999
-FILES := ${HOME}/notebooks
-PAUSE := 3
+### Start of configuration section
 
-APTPROXY := "http://172.17.0.1:3142"
-PIPPROXY := "http://172.17.0.1:3141"
-PIPHOST  := "172.17.0.1"
+# Base Python image tag (see https://hub.docker.com/_/python)
+PYTHONBASE := 3.11-bookworm
 
-.PHONY: all clean build build_base build_rbase build_python build_r bash start start_pylab start_rlab browser pylab rlab stop stop_pylab stop_rlab list pause
+### Custom built image names
+IMAGE      := pylab
+RIMAGE     := rlab
+
+### Default container ports
+# pylab
+PORT       := 8888
+# tensorboard
+TFPORT     := 6006
+# rlab
+RPORT      := 9999
+
+### Notebooks directory location
+FILES      := ${HOME}/notebooks
+
+### Application proxies
+# Apt proxy
+APTPROXY   := "http://172.17.0.1:3142"
+# Pip proxy
+PIPPROXY   := "http://172.17.0.1:3141"
+PIPHOST    := "172.17.0.1"
+
+### End of configuration section
+
+all: pylab rlab
 build: build_base build_rbase build_python build_r
-start: start_pylab start_rlab
-stop: stop_pylab stop_rlab
-all: build start
+.PHONY: all clean build build_base build_rbase build_python build_r pylab rlab
 
 clean:
 	docker image prune --force
@@ -36,18 +51,8 @@ build_r:
 	docker build -f Dockerfile.R -t rlab:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} .
 	docker image tag rlab:${PYTHONBASE} rlab:latest
 
-start_pylab:
-	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${PORT} -p ${PORT}:${PORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -d ${IMAGE}:${PYTHONBASE}
+pylab:
+	docker run -it --rm --name ${IMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -e PORT=${PORT} -p ${PORT}:${PORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -d ${IMAGE}:${PYTHONBASE}
 
-start_rlab:
-	docker run -it --rm -v ${FILES}:/notebook/files -e PORT=${RPORT} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
-
-stop_pylab:
-	docker stop `docker ps -q --filter "ancestor=pylab"`
-
-stop_rlab:
-	docker stop `docker ps -q --filter "ancestor=rlab"`
-
-list:
-	docker ps --filter "ancestor=${IMAGE}"
-
+rlab:
+	docker run -it --rm --name ${RIMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -e PORT=${RPORT} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}

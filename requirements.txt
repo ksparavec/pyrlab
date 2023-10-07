@@ -11,8 +11,8 @@ gym
 h5py
 ipywidgets
 jupyter
-jupyterlab
 jupyter_ai
+jupyterlab
 keras
 keras-tuner
 matplotlib
@@ -20,8 +20,8 @@ MiniSom
 missingno
 mlflow
 networkx
-numpy
 numexpr
+numpy
 openai
 pandas
 pandoc

@@ -1,10 +1,10 @@
-repr
-IRkernel
 devtools
-plotly
-ggplot2
-tidyr
 dplyr
+ggplot2
+IRkernel
+plotly
 quantmod
-zoo
+repr
+tidyr
 urca
+zoo
