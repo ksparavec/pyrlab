@@ -40,5 +40,5 @@ RUN set -eux; \
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 
-CMD cd ${HOMEDIR} && cd ${FILES} && jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0
+CMD cd ${HOMEDIR} && cd ${FILES} && SHELL=/bin/bash jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0
 
