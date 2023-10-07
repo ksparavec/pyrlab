@@ -12,10 +12,8 @@ WORKDIR ${HOMEDIR}
 SHELL [ "/bin/bash", "-l", "-c" ]
 
 COPY --chown=${USER}:${USER} requirements.txt ./
-COPY --chown=${USER}:${USER} dot.vimrc ./.vimrc
-COPY --chown=${USER}:${USER} dot.bash_aliases ./.bash_aliases
 
-# install non-system Python modules
+# install non-system Python modules into ${HOMEDIR}/.local
 RUN set -eux; \
     export PYTHONDONTWRITEBYTECODE=1; \
     [[ zzz${PIPPROXY} != zzz ]] && export USEPROXY="-i ${PIPPROXY}/root/pypi/+simple --trusted-host ${PIPHOST}"; \
@@ -26,10 +24,6 @@ RUN set -eux; \
         --no-compile \
         --user \
         ${USEPROXY} -r requirements.txt
-
-# finalize image
-RUN set -eux; \
-    mkdir -p -m 0755 ${FILES} ${HOME}/.local/bin
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 

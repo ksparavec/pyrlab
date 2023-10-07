@@ -1,0 +1,2 @@
+Host *
+  IdentityFile /notebook/docker/id_gitlab

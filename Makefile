@@ -15,8 +15,9 @@ TFPORT     := 6006
 # rlab
 RPORT      := 9999
 
-### Notebooks directory location
+### Notebooks and configuration directory locations
 FILES      := ${HOME}/notebooks
+DOCKER     := ${HOME}/docker
 
 ### Application proxies
 # Apt proxy
@@ -52,7 +53,7 @@ build_r:
 	docker image tag rlab:${PYTHONBASE} rlab:latest
 
 pylab:
-	docker run -it --rm --name ${IMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -e PORT=${PORT} -p ${PORT}:${PORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -d ${IMAGE}:${PYTHONBASE}
+	docker run -it --rm --name ${IMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -v ${DOCKER}:/notebook/docker:ro -e PORT=${PORT} -p ${PORT}:${PORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -d ${IMAGE}:${PYTHONBASE}
 
 rlab:
-	docker run -it --rm --name ${RIMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -e PORT=${RPORT} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
+	docker run -it --rm --name ${RIMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -v ${DOCKER}:/notebook/docker:ro -e PORT=${RPORT} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}

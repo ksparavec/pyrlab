@@ -11,10 +11,9 @@ USER ${USER}
 WORKDIR ${HOMEDIR}
 
 COPY --chown=${USER}:${USER} r_requirements.txt ./
-COPY --chown=${USER}:${USER} dot.vimrc ./.vimrc
-COPY --chown=${USER}:${USER} dot.bash_aliases ./.bash_aliases
+COPY --chown=${USER}:${USER} r_packages.txt ./
 
-# install non-system Python modules
+# install non-system Python modules into ${HOMEDIR}/.local
 RUN set -eux; \
     export PYTHONDONTWRITEBYTECODE=1; \
     [[ zzz${PIPPROXY} != zzz ]] && export USEPROXY="-i ${PIPPROXY}/root/pypi/+simple --trusted-host ${PIPHOST}"; \
@@ -24,11 +23,7 @@ RUN set -eux; \
         --no-cache-dir \
         --no-compile \
         --user \
-        ${USEPROXY} -r r_requirements.txt; \
-    export PATH=${HOMEDIR}/.local/bin:${PATH}; \
-    mkdir -p -m 0755 ${FILES} ${HOME}/.local/bin
-
-COPY --chown=${USER}:${USER} r_packages.txt ./
+        ${USEPROXY} -r r_requirements.txt
 
 # install further R packages
 RUN set -eux; \
@@ -40,10 +35,8 @@ RUN set -eux; \
     command=$(echo ${command} | sed 's/,$//'); \
     command=${command}"),Ncpus=8)"; \
     r -e ${command}; \
-    export PATH=${HOMEDIR}/.local/bin:${PATH}; \
     r -e 'IRkernel::installspec()'; \
-    rm -rf /tmp/downloaded_packages/ /tmp/*.rds; \
-    mkdir -p -m 0755 ${FILES} ${HOME}/.local/bin
+    rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 

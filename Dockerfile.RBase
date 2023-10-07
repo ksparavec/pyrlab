@@ -15,5 +15,5 @@ RUN set -eux; \
     chown -R ${USER}:${USER} /usr/local/lib/R; \
     rm -rf /tmp/downloaded_packages/ /tmp/*.rds; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* /r_debs.txt
 

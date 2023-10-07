@@ -15,9 +15,15 @@ RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends `cat base_debs.txt`; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-    rm -rf /var/lib/apt/lists/*; \
+    rm -rf /var/lib/apt/lists/* /base_debs.txt; \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen; \
     locale-gen en_US.utf8; \
     update-locale LANG=en_US.UTF-8; \
-    useradd -U ${USER} -m -d ${HOMEDIR} -s /bin/bash
+    useradd -U ${USER} -m -d ${HOMEDIR} -s /bin/bash; \
+    mkdir -m 0700 ${HOMEDIR}/.ssh; \
+    chown ${USER}:${USER} ${HOMEDIR}/.ssh
+
+COPY --chown=${USER}:${USER} dot.vimrc ${HOMEDIR}/.vimrc
+COPY --chown=${USER}:${USER} dot.bash_aliases ${HOMEDIR}/.bash_aliases
+COPY --chown=${USER}:${USER} dot.ssh_config ${HOMEDIR}/.ssh/config
 
