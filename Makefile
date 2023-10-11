@@ -10,6 +10,8 @@ RIMAGE     := rlab
 ### Default container ports
 # pylab
 PORT       := 8888
+# D-Tale
+DTPORT     := 40000
 # tensorboard
 TFPORT     := 6006
 # rlab
@@ -53,7 +55,7 @@ build_r:
 	docker image tag rlab:${PYTHONBASE} rlab:latest
 
 pylab:
-	docker run -it --rm --name ${IMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -v ${DOCKER}:/notebook/docker:ro -e PORT=${PORT} -p ${PORT}:${PORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -d ${IMAGE}:${PYTHONBASE}
+	docker run -h `hostname` -it --rm --name ${IMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -v ${DOCKER}:/notebook/docker:ro -e PORT=${PORT} -p ${PORT}:${PORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} -d ${IMAGE}:${PYTHONBASE}
 
 rlab:
 	docker run -it --rm --name ${RIMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -v ${DOCKER}:/notebook/docker:ro -e PORT=${RPORT} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
