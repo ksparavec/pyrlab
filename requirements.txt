@@ -14,6 +14,7 @@ ipywidgets
 jupyter
 jupyter_ai
 jupyterlab
+jupyterlab_h5web[full]
 keras
 keras-tuner
 matplotlib
