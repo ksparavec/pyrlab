@@ -30,6 +30,7 @@ pandoc
 plotly
 pydot
 pyfolio-reloaded
+pytimetk
 pytz
 quandl
 QuantLib
