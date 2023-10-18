@@ -31,5 +31,5 @@ CMD cd ${HOMEDIR} && \
     rmdir .ssh && \
     find /notebook/docker -mindepth 1 -maxdepth 1 -exec ln -s {} . \; && \
     cd ${FILES} && \
-    SHELL=/bin/bash jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0
+    SHELL=/bin/bash jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0 --LabApp.token=''
 
