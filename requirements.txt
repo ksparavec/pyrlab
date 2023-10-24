@@ -10,6 +10,7 @@ fredapi
 graphviz
 gym
 h5py
+imageio
 ipywidgets
 jupyter
 jupyter_ai
@@ -46,6 +47,7 @@ tables
 tabulate
 tensorboard
 tensorflow-cpu
+tensorflow_probability
 torch
 xgboost
 xlrd
