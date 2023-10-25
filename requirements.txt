@@ -1,4 +1,6 @@
 arch
+arviz
+bspline
 cufflinks
 cvxpy
 Cython
@@ -7,10 +9,15 @@ dill
 dtale
 ffmpeg
 fredapi
+gpytorch
 graphviz
+gsl
 gym
 h5py
 imageio
+ipykernel
+ipython
+ipython_genutils
 ipywidgets
 jupyter
 jupyter_ai
@@ -21,8 +28,11 @@ keras-tuner
 matplotlib
 MiniSom
 missingno
+mkl
 mlflow
+nbformat
 networkx
+notebook
 numexpr
 numpy
 openai
@@ -31,6 +41,7 @@ pandoc
 plotly
 pydot
 pyfolio-reloaded
+pymc3
 pytimetk
 pytz
 quandl
@@ -46,9 +57,11 @@ sympy
 tables
 tabulate
 tensorboard
-tensorflow-cpu
-tensorflow_probability
+tensorflow
+tensorflow-probability
+theano
 torch
+tqdm
 xgboost
 xlrd
 yfinance
