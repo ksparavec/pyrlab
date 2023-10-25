@@ -32,10 +32,15 @@ PIPHOST    := "172.17.0.1"
 
 all: pylab rlab
 build: build_base build_rbase build_python build_r
-.PHONY: all clean build build_base build_rbase build_python build_r pylab rlab
+.PHONY: all image_clean cache_clean clean build build_base build_rbase build_python build_r pylab rlab
 
-clean:
+image_clean:
 	docker image rm pyrlab-base:${PYTHONBASE} pylab:${PYTHONBASE} rlab-base:${PYTHONBASE} rlab:${PYTHONBASE}
+
+cache_clean:
+	docker builder prune -f
+
+clean: image_clean cache_clean
 
 build_base:
 	docker build -f Dockerfile.Base -t pyrlab-base:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} .
