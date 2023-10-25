@@ -35,8 +35,7 @@ build: build_base build_rbase build_python build_r
 .PHONY: all clean build build_base build_rbase build_python build_r pylab rlab
 
 clean:
-	docker image prune --force
-	docker image rm pyrlab-base pylab rlab-base rlab
+	docker image rm pyrlab-base:${PYTHONBASE} pylab:${PYTHONBASE} rlab-base:${PYTHONBASE} rlab:${PYTHONBASE}
 
 build_base:
 	docker build -f Dockerfile.Base -t pyrlab-base:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} .
