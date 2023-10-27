@@ -1,8 +1,14 @@
+bootstrap
 devtools
 dplyr
+gbm
 ggplot2
+glmnet
 IRkernel
+lars
+mda
 plotly
+princurve
 quantmod
 repr
 tidyr
