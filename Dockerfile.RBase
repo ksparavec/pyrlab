@@ -9,7 +9,7 @@ COPY r_debs.txt ./
 # install R distribution with development packages from r-project.org
 RUN set -eux; \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-key '95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7'; \
-    echo 'deb http://cloud.r-project.org/bin/linux/debian bookworm-cran40/' >/etc/apt/sources.list.d/cran40.list; \
+    echo 'deb http://cloud.r-project.org/bin/linux/debian bullseye-cran40/' >/etc/apt/sources.list.d/cran40.list; \
     apt-get update; \
     apt-get install -y --no-install-recommends `cat r_debs.txt`; \
     chown -R ${USER}:${USER} /usr/local/lib/R; \

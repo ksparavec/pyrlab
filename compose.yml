@@ -1,0 +1,57 @@
+x-configuration:
+  args: &args
+    PYTHONBASE: "${PYTHONBASE:-3.11-bookworm}"
+    APTPROXY:   "${APTPROXY:-http://172.17.0.1:3142}"
+    PIPPROXY:   "${PIPPROXY:-http://172.17.0.1:3141}"
+    PIPHOST:    "${PIPHOST:-172.17.0.1}"
+  pyenv: &pyenv
+    PORT:   "${PORT:-8888}"
+    TFPORT: "${TFPORT:-6006}"
+    DTPORT: "${DTPORT:-40000}"
+  pyports: &pyports
+    - "8888:8888"
+    - "6006:6006"
+    - "40000:40000"
+  volumes: &volumes
+    - "${HOME}/notebooks:/notebook/files"
+    - "${HOME}/docker:/notebook/docker"
+
+services:
+  python:
+    image: "python:${PYTHONBASE:-3.11-bookworm}"
+  pyrlab-base:
+    image: "pyrlab-base"
+    build:
+      tags:
+        - "pyrlab-base:${PYTHONBASE:-3.11-bookworm}"
+      context: "."
+      dockerfile: "Dockerfile.Base"
+      args: *args
+  pylab:
+    image: "pylab"
+    build:
+      tags:
+        - "pylab:${PYTHONBASE:-3.11-bookworm}"
+      context: "."
+      dockerfile: "Dockerfile.Python"
+      args: *args
+    ports: *pyports
+    volumes: *volumes
+    environment: *pyenv
+  rlab-base:
+    image: "rlab-base"
+    build:
+      tags:
+        - "rlab-base:${PYTHONBASE:-3.11-bookworm}"
+      context: "."
+      dockerfile: "Dockerfile.RBase"
+      args: *args
+  rlab:
+    image: "rlab"
+    build:
+      tags:
+        - "rlab:${PYTHONBASE:-3.11-bookworm}"
+      context: "."
+      dockerfile: "Dockerfile.R"
+      args: *args
+

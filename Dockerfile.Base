@@ -2,6 +2,13 @@ ARG PYTHONBASE
 FROM python:${PYTHONBASE}
 
 ARG APTPROXY
+
+ENV CUDA_ARCH=x86_64
+ENV CUDA_DEB=debian11
+ENV CUDA_KRP=cuda-keyring_1.1-1_all.deb
+ENV CUDA_KRP_URL=https://developer.download.nvidia.com/compute/cuda/repos
+ENV CUDA_URL=http://HTTPS///developer.download.nvidia.com/compute/cuda/repos
+
 ENV USER=notebook
 ENV HOMEDIR=/notebook
 ENV FILES=${HOMEDIR}/files
@@ -11,9 +18,17 @@ SHELL [ "/bin/bash", "-l", "-c" ]
 COPY base_debs.txt ./
 
 RUN set -eux; \
+    export DEBIAN_FRONTEND=noninteractive; \
     [[ zzz${APTPROXY} != zzz ]] && echo "Acquire::http::proxy \"${APTPROXY}\";" >/etc/apt/apt.conf.d/02proxy; \
     apt-get update; \
     apt-get install -y --no-install-recommends `cat base_debs.txt`; \
+    apt-get install -y --no-install-recommends linux-headers-`uname -r`; \
+    add-apt-repository contrib; \
+    apt-key del 7fa2af80; \
+    cd /tmp && wget "${CUDA_KRP_URL}/${CUDA_DEB}/${CUDA_ARCH}/${CUDA_KRP}" && dpkg -i "${CUDA_KRP}" && rm -f "${CUDA_KRP}"; \
+    echo "deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] ${CUDA_URL}/${CUDA_DEB}/${CUDA_ARCH}/ /" | tee /etc/apt/sources.list.d/cuda-${CUDA_DEB}-${CUDA_ARCH}.list; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends cuda; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     rm -rf /var/lib/apt/lists/* /base_debs.txt; \
     echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen; \

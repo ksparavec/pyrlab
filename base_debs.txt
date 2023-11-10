@@ -17,6 +17,7 @@ npm
 pandoc
 pandoc-data
 python3-pandocfilters
+software-properties-common
 texlive-fonts-recommended
 texlive-plain-generic
 texlive-xetex
