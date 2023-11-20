@@ -17,9 +17,9 @@ COPY --chown=${USER}:${USER} requirements.txt ./
 RUN set -eux; \
     export PYTHONDONTWRITEBYTECODE=1; \
     [[ zzz${PIPPROXY} != zzz ]] && export USEPROXY="-i ${PIPPROXY}/root/pypi/+simple --trusted-host ${PIPHOST}"; \
+    pip install --upgrade pip; \
     pip install \
         --no-warn-script-location \
-        --disable-pip-version-check \
         --no-cache-dir \
         --no-compile \
         --user \
@@ -30,8 +30,9 @@ ENTRYPOINT [ "/usr/bin/tini", "--" ]
 CMD cd ${HOMEDIR} && \
     rmdir .ssh && \
     find /notebook/docker -mindepth 1 -maxdepth 1 -exec ln -s {} . \; && \
-    export PATH=/usr/local/cuda/bin${PATH:+:${PATH}} && \
-    export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} && \
+    [[ -x ./.pylabrc ]] && ./.pylabrc && \
+    [[ -d /usr/local/cuda/bin ]] && export PATH=/usr/local/cuda/bin${PATH:+:${PATH}} && \
+    [[ -d /usr/local/cuda/bin ]] && export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} && \
     cd ${FILES} && \
     SHELL=/bin/bash jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0 --LabApp.token=''
 

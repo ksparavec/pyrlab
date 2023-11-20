@@ -5,6 +5,7 @@ curl
 ed
 fonts-texgyre
 git
+git-lfs
 iputils-ping
 less
 libcurl4-openssl-dev
