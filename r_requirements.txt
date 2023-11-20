@@ -1,3 +1,4 @@
 ipywidgets
 jupyter
 jupyterlab
+#jupyterlab-git

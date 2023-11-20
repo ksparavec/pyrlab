@@ -13,24 +13,26 @@ SHELL [ "/bin/bash", "-l", "-c" ]
 
 COPY --chown=${USER}:${USER} requirements.txt ./
 
-# install non-system Python modules into ${HOMEDIR}/.local
-RUN set -eux; \
-    export PYTHONDONTWRITEBYTECODE=1; \
-    [[ zzz${PIPPROXY} != zzz ]] && export USEPROXY="-i ${PIPPROXY}/root/pypi/+simple --trusted-host ${PIPHOST}"; \
-    pip install --upgrade pip; \
-    pip install \
-        --no-warn-script-location \
-        --no-cache-dir \
-        --no-compile \
-        --user \
-        ${USEPROXY} -r requirements.txt
+RUN <<EOT
+#!/usr/bin/env bash
+set -eux
+export PYTHONDONTWRITEBYTECODE=1
+[[ zzz${PIPPROXY} != zzz ]] && export USEPROXY="-i ${PIPPROXY}/root/pypi/+simple --trusted-host ${PIPHOST}"
+pip install --upgrade pip
+pip install \
+    --no-warn-script-location \
+    --no-cache-dir \
+    --no-compile \
+    --user \
+    ${USEPROXY} -r requirements.txt
+EOT
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 
 CMD cd ${HOMEDIR} && \
     rmdir .ssh && \
     find /notebook/docker -mindepth 1 -maxdepth 1 -exec ln -s {} . \; && \
-    [[ -x ./.pylabrc ]] && ./.pylabrc && \
+    [[ -x ./.pylabrc ]] && ./.pylabrc || true && \
     [[ -d /usr/local/cuda/bin ]] && export PATH=/usr/local/cuda/bin${PATH:+:${PATH}} && \
     [[ -d /usr/local/cuda/bin ]] && export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} && \
     cd ${FILES} && \

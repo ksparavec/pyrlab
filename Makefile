@@ -3,6 +3,10 @@
 # Base Python image tag (see https://hub.docker.com/_/python)
 PYTHONBASE := 3.11-bullseye
 
+# Install CUDA into base image?
+CUDA_INSTALL := yes
+DOCKER_ARGS  := --runtime=nvidia --gpus all
+
 ### Custom built image names
 IMAGE      := pylab
 RIMAGE     := rlab
@@ -43,11 +47,11 @@ cache_clean:
 clean: image_clean cache_clean
 
 build_base:
-	docker build -f Dockerfile.Base -t pyrlab-base:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} .
+	docker build -f Dockerfile.Base -t pyrlab-base:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} --build-arg CUDA_INSTALL=${CUDA_INSTALL} .
 	docker image tag pyrlab-base:${PYTHONBASE} pyrlab-base:latest
 
 build_pylab:
-	docker build -f Dockerfile.Python -t pylab:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} .
+	docker build -f Dockerfile.PyLab -t pylab:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} .
 	docker image tag pylab:${PYTHONBASE} pylab:latest
 
 build_rbase:
@@ -55,12 +59,12 @@ build_rbase:
 	docker image tag rlab-base:${PYTHONBASE} rlab-base:latest
 
 build_rlab:
-	docker build -f Dockerfile.R -t rlab:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} .
+	docker build -f Dockerfile.RLab -t rlab:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} .
 	docker image tag rlab:${PYTHONBASE} rlab:latest
 
 pylab:
-	docker run -h `hostname` -it --rm --runtime=nvidia --gpus all --name ${IMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -v ${DOCKER}:/notebook/docker -e PORT=${PORT} -p ${PORT}:${PORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} -d ${IMAGE}:${PYTHONBASE}
+	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${IMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -v ${DOCKER}:/notebook/docker -e PORT=${PORT} -p ${PORT}:${PORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} -d ${IMAGE}:${PYTHONBASE}
 
 rlab:
-	docker run -h `hostname` -it --rm --runtime=nvidia --gpus all --name ${RIMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -v ${DOCKER}:/notebook/docker -e PORT=${RPORT} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
+	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${RIMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -v ${DOCKER}:/notebook/docker -e PORT=${RPORT} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
 

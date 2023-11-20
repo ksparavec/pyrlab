@@ -13,8 +13,6 @@ libopenblas0-pthread
 libssl-dev
 libzmq3-dev
 locales
-nodejs
-npm
 pandoc
 pandoc-data
 python3-pandocfilters
