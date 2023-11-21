@@ -3,7 +3,8 @@ FROM pyrlab-base:${PYTHONBASE}
 
 ARG PIPPROXY
 ARG PIPHOST
-ENV PORT=8888
+ENV PORT=${PORT}
+ENV RCS=${RCS}
 
 USER ${USER}
 
@@ -27,14 +28,8 @@ pip install \
     ${USEPROXY} -r requirements.txt
 EOT
 
-ENTRYPOINT [ "/usr/bin/tini", "--" ]
+COPY --chown=${USER}:${USER} --chmod=0755 jupyterlab.sh ./
 
-CMD cd ${HOMEDIR} && \
-    rmdir .ssh && \
-    find /notebook/docker -mindepth 1 -maxdepth 1 -exec ln -s {} . \; && \
-    [[ -x ./.pylabrc ]] && ./.pylabrc || true && \
-    [[ -d /usr/local/cuda/bin ]] && export PATH=/usr/local/cuda/bin${PATH:+:${PATH}} && \
-    [[ -d /usr/local/cuda/bin ]] && export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} && \
-    cd ${FILES} && \
-    SHELL=/bin/bash jupyter lab --port=${PORT} --no-browser --ip=0.0.0.0 --LabApp.token=''
+ENTRYPOINT [ "/usr/bin/tini", "--" ]
+CMD [[ -x /volumes/docker/userlab.sh ]] && /volumes/docker/userlab.sh || ${HOMEDIR}/jupyterlab.sh
 

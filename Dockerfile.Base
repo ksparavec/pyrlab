@@ -15,7 +15,6 @@ ENV CUDA_URL=http://HTTPS///developer.download.nvidia.com/compute/cuda/repos
 
 ENV USER=notebook
 ENV HOMEDIR=/notebook
-ENV FILES=${HOMEDIR}/files
 
 SHELL [ "/bin/bash", "-l", "-c" ]
 

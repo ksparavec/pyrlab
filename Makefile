@@ -13,7 +13,7 @@ RIMAGE     := rlab
 
 ### Default container ports
 # pylab
-PORT       := 8888
+PYPORT     := 8888
 # D-Tale
 DTPORT     := 40000
 # tensorboard
@@ -21,8 +21,14 @@ TFPORT     := 6006
 # rlab
 RPORT      := 9999
 
+### Default user scripts
+# pylab
+PYRCS      := pylab.sh
+# rlab
+RRCS       := rlab.sh
+
 ### Notebooks and configuration directory locations
-FILES      := ${HOME}/notebooks
+NOTEBOOKS  := ${HOME}/notebooks
 DOCKER     := ${HOME}/docker
 
 ### Application proxies
@@ -63,8 +69,8 @@ build_rlab:
 	docker image tag rlab:${PYTHONBASE} rlab:latest
 
 pylab:
-	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${IMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -v ${DOCKER}:/notebook/docker -e PORT=${PORT} -p ${PORT}:${PORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} -d ${IMAGE}:${PYTHONBASE}
+	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${IMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${PYPORT} -e RCS=${PYRCS} -p ${PYPORT}:${PYPORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} -d ${IMAGE}:${PYTHONBASE}
 
 rlab:
-	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${RIMAGE}_${PYTHONBASE} -v ${FILES}:/notebook/files -v ${DOCKER}:/notebook/docker -e PORT=${RPORT} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
+	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${RIMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${RPORT} -e RCS=${RRCS} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
 
