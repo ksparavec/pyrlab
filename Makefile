@@ -3,7 +3,7 @@
 # Base Python image tag (see https://hub.docker.com/_/python)
 PYTHONBASE := 3.11-bullseye
 
-# Install CUDA into base image?
+# Install CUDA into base image? (optional)
 CUDA_INSTALL := yes
 DOCKER_ARGS  := --runtime=nvidia --gpus all
 
@@ -21,17 +21,19 @@ TFPORT     := 6006
 # rlab
 RPORT      := 9999
 
-### Default user scripts
-# pylab
+### Default user scripts (optional)
+# pylab rc
 PYRCS      := pylab.sh
-# rlab
+# rlab rc
 RRCS       := rlab.sh
+# jupyter lab start
+USERLAB    := userlab.sh
 
-### Notebooks and configuration directory locations
+### Notebooks and configuration directory locations on host
 NOTEBOOKS  := ${HOME}/notebooks
 DOCKER     := ${HOME}/docker
 
-### Application proxies
+### Application proxies (optional)
 # Apt proxy
 APTPROXY   := "http://172.17.0.1:3142"
 # Pip proxy
@@ -40,7 +42,7 @@ PIPHOST    := "172.17.0.1"
 
 ### End of configuration section
 
-all: pylab rlab
+all: build pylab rlab
 build: build_base build_rbase build_pylab build_rlab
 .PHONY: all image_clean cache_clean clean build build_base build_rbase build_pylab build_rlab pylab rlab
 
@@ -69,8 +71,8 @@ build_rlab:
 	docker image tag rlab:${PYTHONBASE} rlab:latest
 
 pylab:
-	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${IMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${PYPORT} -e RCS=${PYRCS} -p ${PYPORT}:${PYPORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} -d ${IMAGE}:${PYTHONBASE}
+	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${IMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${PYPORT} -e RCS=${PYRCS} -e USERLAB=${USERLAB} -p ${PYPORT}:${PYPORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} -d ${IMAGE}:${PYTHONBASE}
 
 rlab:
-	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${RIMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${RPORT} -e RCS=${RRCS} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
+	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${RIMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${RPORT} -e RCS=${RRCS} -e USERLAB=${USERLAB} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
 

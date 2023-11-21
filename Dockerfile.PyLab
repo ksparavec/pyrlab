@@ -3,6 +3,8 @@ FROM pyrlab-base:${PYTHONBASE}
 
 ARG PIPPROXY
 ARG PIPHOST
+
+ENV USERLAB=${USERLAB}
 ENV PORT=${PORT}
 ENV RCS=${RCS}
 
@@ -31,5 +33,5 @@ EOT
 COPY --chown=${USER}:${USER} --chmod=0755 jupyterlab.sh ./
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
-CMD [[ -x /volumes/docker/userlab.sh ]] && /volumes/docker/userlab.sh || ${HOMEDIR}/jupyterlab.sh
+CMD [[ -x /volumes/docker/${USERLAB} ]] && /volumes/docker/${USERLAB} || ${HOMEDIR}/jupyterlab.sh
 

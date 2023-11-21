@@ -29,6 +29,7 @@ jupyterlab
 jupyterlab_h5web[full]
 keras
 keras-tuner
+keras-utils
 lamini
 matplotlib
 MiniSom

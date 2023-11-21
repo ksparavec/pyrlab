@@ -1,8 +1,8 @@
 ARG PYTHONBASE
 FROM pyrlab-base:${PYTHONBASE}
 
-ENV LC_ALL en_US.UTF-8
-ENV LANG en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+ENV LANG=en_US.UTF-8
 
 COPY r_debs.txt ./
 
