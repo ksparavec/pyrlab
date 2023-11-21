@@ -7,6 +7,7 @@ fonts-texgyre
 git
 git-lfs
 iputils-ping
+jq
 less
 libcurl4-openssl-dev
 libopenblas0-pthread
