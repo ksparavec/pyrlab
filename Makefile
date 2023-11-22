@@ -47,10 +47,10 @@ build: build_base build_rbase build_pylab build_rlab
 .PHONY: all image_clean cache_clean clean build build_base build_rbase build_pylab build_rlab pylab rlab
 
 image_clean:
-	docker image rm pyrlab-base:${PYTHONBASE} pylab:${PYTHONBASE} rlab-base:${PYTHONBASE} rlab:${PYTHONBASE}
+	docker image rm pyrlab-base:${PYTHONBASE} pylab:${PYTHONBASE} rlab-base:${PYTHONBASE} rlab:${PYTHONBASE} pyrlab-base pylab rlab-base rlab
 
 cache_clean:
-	docker builder prune -f
+	docker buildx prune -af
 
 clean: image_clean cache_clean
 

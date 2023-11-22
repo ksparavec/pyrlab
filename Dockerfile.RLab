@@ -23,6 +23,7 @@ export PYTHONDONTWRITEBYTECODE=1
 [[ zzz${PIPPROXY} != zzz ]] && export USEPROXY="-i ${PIPPROXY}/root/pypi/+simple --trusted-host ${PIPHOST}"
 pip install --upgrade pip
 pip install \
+    --default-timeout=300 \
     --no-warn-script-location \
     --no-cache-dir \
     --no-compile \
