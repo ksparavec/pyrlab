@@ -65,7 +65,8 @@ set -eux
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen en_US.utf8
 update-locale LANG=en_US.UTF-8
-useradd -U ${USER} -m -d ${HOMEDIR} -s /bin/bash
+useradd -U ${USER} -p '' -m -d ${HOMEDIR} -s /bin/bash
+usermod -a -G sudo ${USER}
 mkdir -m 0700 ${HOMEDIR}/.ssh
 chown ${USER}:${USER} ${HOMEDIR}/.ssh
 EOT

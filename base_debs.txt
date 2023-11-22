@@ -18,6 +18,7 @@ pandoc
 pandoc-data
 python3-pandocfilters
 software-properties-common
+sudo
 texlive-fonts-recommended
 texlive-plain-generic
 texlive-xetex
