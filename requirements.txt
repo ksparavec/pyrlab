@@ -1,3 +1,4 @@
+amazon-codewhisperer-jupyterlab-ext
 arch
 arcticdb
 arviz
@@ -19,6 +20,7 @@ gym
 h5py
 imageio
 ipykernel
+ipympl
 ipython
 ipython_genutils
 ipywidgets
@@ -38,6 +40,7 @@ mkl
 mlflow
 nbformat
 networkx
+nodejs-bin
 notebook
 numexpr
 numpy
@@ -68,9 +71,11 @@ tensorflow
 tensorflow-probability
 theano
 torch
+torchvision
 tqdm
 transformers
 xgboost
 xlrd
 yfinance
+wandb
 zstandard
