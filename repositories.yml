@@ -1,0 +1,4 @@
+- name:    "PRML"
+  enable:  "yes"
+  url:     "https://github.com/ctgk/PRML"
+  command: "python setup.py install --user"

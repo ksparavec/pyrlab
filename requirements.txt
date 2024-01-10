@@ -27,7 +27,7 @@ ipywidgets
 jupyter
 #jupyter_ai
 jupyterlab
-#jupyterlab-git
+jupyterlab-git
 jupyterlab_h5web[full]
 keras
 keras-tuner
@@ -74,8 +74,8 @@ torch
 torchvision
 tqdm
 transformers
+wandb
 xgboost
 xlrd
 yfinance
-wandb
 zstandard
