@@ -33,6 +33,9 @@ USERLAB    := userlab.sh
 NOTEBOOKS  := ${HOME}/notebooks
 DOCKER     := ${HOME}/docker
 
+### Default environment variables definitions in container (optional)
+ENVVARS    := /volumes/docker/.env
+
 ### Application proxies (optional)
 # Apt proxy
 APTPROXY   := "http://172.17.0.1:3142"
@@ -71,8 +74,8 @@ build_rlab:
 	docker image tag rlab:${PYTHONBASE} rlab:latest
 
 pylab:
-	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${IMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${PYPORT} -e RCS=${PYRCS} -e USERLAB=${USERLAB} -p ${PYPORT}:${PYPORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} -d ${IMAGE}:${PYTHONBASE}
+	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${IMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${PYPORT} -e ENVVARS=${ENVVARS} -e RCS=${PYRCS} -e USERLAB=${USERLAB} -p ${PYPORT}:${PYPORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} -d ${IMAGE}:${PYTHONBASE}
 
 rlab:
-	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${RIMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${RPORT} -e RCS=${RRCS} -e USERLAB=${USERLAB} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
+	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${RIMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${RPORT} -e ENVVARS=${ENVVARS}-e RCS=${RRCS} -e USERLAB=${USERLAB} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
 

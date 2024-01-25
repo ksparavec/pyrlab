@@ -4,6 +4,8 @@ set -eux
 cd && rm -rf .ssh .ipython .gitconfig
 find /volumes/docker -mindepth 1 -maxdepth 1 -exec ln -s {} . \;
 
+[[ -r ${ENVVARS} ]] && set -a && . ${ENVVARS} && set +a || true
+
 [[ -x ${RCS} ]] && ./${RCS} || true
 
 [[ -d /usr/local/cuda/bin ]] && export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}

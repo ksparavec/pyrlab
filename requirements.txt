@@ -3,6 +3,8 @@ arch
 arcticdb
 arviz
 bspline
+chart_studio
+chartpy
 cufflinks
 cvxpy
 Cython
@@ -12,6 +14,7 @@ dill
 dill[graph]
 dtale
 ffmpeg
+findatapy
 fredapi
 gpytorch
 graphviz
