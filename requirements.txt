@@ -1,10 +1,14 @@
+ai21
 amazon-codewhisperer-jupyterlab-ext
+anthropic
 arch
 arcticdb
 arviz
+boto3
 bspline
-chart_studio
 chartpy
+chart_studio
+#cohere
 cufflinks
 cvxpy
 Cython
@@ -16,11 +20,13 @@ dtale
 ffmpeg
 findatapy
 fredapi
+gpt4all
 gpytorch
 graphviz
 gsl
 gym
 h5py
+huggingface_hub
 imageio
 ipykernel
 ipympl
@@ -28,9 +34,9 @@ ipython
 ipython_genutils
 ipywidgets
 jupyter
-#jupyter_ai
+jupyter_ai
 jupyterlab
-jupyterlab-git
+#jupyterlab-git
 jupyterlab_h5web[full]
 keras
 keras-tuner
@@ -50,6 +56,7 @@ numpy
 openai
 pandas
 pandoc
+pillow
 plotly
 pydot
 pyfolio-reloaded
@@ -57,6 +64,7 @@ pymc3
 python-env-loader
 pytimetk
 pytz
+#qianfan
 quandl
 QuantLib
 QuantStats
