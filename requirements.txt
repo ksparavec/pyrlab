@@ -17,6 +17,8 @@ datetime
 dill
 dill[graph]
 dtale
+#dvc[all]
+dvc[ssh,oss,webdav,hdfs,gdrive]
 ffmpeg
 findatapy
 fredapi
@@ -56,11 +58,14 @@ numpy
 openai
 pandas
 pandoc
+peft
 pillow
 plotly
+poetry
 pydot
 pyfolio-reloaded
 pymc3
+pytest
 python-env-loader
 pytimetk
 pytz
@@ -85,6 +90,7 @@ torch
 torchvision
 tqdm
 transformers
+tushare
 wandb
 xgboost
 xlrd

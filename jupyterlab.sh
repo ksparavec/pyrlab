@@ -8,6 +8,7 @@ find /volumes/docker -mindepth 1 -maxdepth 1 -exec ln -s {} . \;
 
 [[ -x ${RCS} ]] && ./${RCS} || true
 
+export PATH=${HOME}/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 [[ -d /usr/local/cuda/bin ]] && export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}
 [[ -d /usr/local/cuda/bin ]] && export LD_LIBRARY_PATH=/usr/local/cuda/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
 
