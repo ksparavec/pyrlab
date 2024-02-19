@@ -4,6 +4,7 @@ anthropic
 arch
 arcticdb
 arviz
+azureml
 boto3
 bspline
 chartpy
@@ -19,6 +20,7 @@ dill[graph]
 dtale
 #dvc[all]
 dvc[ssh,oss,webdav,hdfs,gdrive]
+fawltydeps
 ffmpeg
 findatapy
 fredapi
@@ -85,9 +87,11 @@ tabulate
 tensorboard
 tensorflow
 tensorflow-probability
+thalesians.tsa
 theano
 torch
 torchvision
+torch_geometric
 tqdm
 transformers
 tushare

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eux
 
-cd && rm -rf .ssh .ipython .gitconfig
+cd && rm -rf .ssh .ipython .gitconfig .cache
 find /volumes/docker -mindepth 1 -maxdepth 1 -exec ln -s {} . \;
 
 [[ -r ${ENVVARS} ]] && set -a && . ${ENVVARS} && set +a || true

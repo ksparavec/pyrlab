@@ -1,0 +1,29 @@
+--- forecaster_orig.py	2024-02-13 10:14:32.039741741 +0000
++++ forecaster.py	2024-02-13 10:17:35.788813567 +0000
+@@ -398,7 +398,7 @@
+                 cp_indexes = (
+                     np.linspace(0, hist_size - 1, self.n_changepoints + 1)
+                         .round()
+-                        .astype(np.int)
++                        .astype(int)
+                 )
+                 self.changepoints = (
+                     self.history.iloc[cp_indexes]['ds'].tail(-1)
+@@ -431,7 +431,7 @@
+         t = np.array(
+             (dates - datetime(1970, 1, 1))
+                 .dt.total_seconds()
+-                .astype(np.float)
++                .astype(float)
+         ) / (3600 * 24.)
+         return np.column_stack([
+             fun((2.0 * (i + 1) * np.pi * t / period))
+@@ -888,7 +888,7 @@
+         group_cols = new_comp['col'].unique()
+         if len(group_cols) > 0:
+             new_comp = pd.DataFrame({'col': group_cols, 'component': name})
+-            components = components.append(new_comp)
++            components = pd.concat([components, new_comp])
+         return components
+ 
+     def parse_seasonality_args(self, name, arg, auto_disable, default_order):
