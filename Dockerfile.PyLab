@@ -22,7 +22,9 @@ RUN <<EOT
 set -eux
 export PYTHONDONTWRITEBYTECODE=1
 [[ zzz${PIPPROXY} != zzz ]] && export USEPROXY="-i ${PIPPROXY}/root/pypi/+simple --trusted-host ${PIPHOST}"
-pip install --upgrade pip
+for package in pip Cython numpy; do
+    pip install --upgrade $package
+done
 pip install \
     --default-timeout=300 \
     --no-warn-script-location \

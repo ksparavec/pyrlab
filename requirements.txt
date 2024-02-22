@@ -5,6 +5,7 @@ arch
 arcticdb
 arviz
 azureml
+azure-ai-ml
 boto3
 bspline
 chartpy
@@ -12,7 +13,6 @@ chart_studio
 #cohere
 cufflinks
 cvxpy
-Cython
 datasets
 datetime
 dill
@@ -56,17 +56,18 @@ networkx
 nodejs-bin
 notebook
 numexpr
-numpy
 openai
 pandas
 pandoc
 peft
 pillow
 plotly
+pmdarima
 poetry
 pydot
 pyfolio-reloaded
 pymc3
+pyramid
 pytest
 python-env-loader
 pytimetk
@@ -95,6 +96,7 @@ torch_geometric
 tqdm
 transformers
 tushare
+utils
 wandb
 xgboost
 xlrd
