@@ -1,7 +1,6 @@
 ARG PYTHONBASE
 FROM rlab-base:${PYTHONBASE}
 
-ARG APTPROXY
 ARG PIPPROXY
 ARG PIPHOST
 
@@ -34,13 +33,12 @@ EOT
 RUN <<EOT
 #!/usr/bin/env bash
 set -eux
-[[ zzz${APTPROXY} != zzz ]] && export http_proxy="${APTPROXY}"
 command="install.packages(c("
 while read package; do \
     command=${command}'"'${package}'",'
 done <r_packages.txt
 command=$(echo ${command} | sed 's/,$//')
-command=${command}"),Ncpus=8)"
+command=${command}"),Ncpus=8,method='wget')"
 r -e ${command}
 r -e 'IRkernel::installspec()'
 rm -rf /tmp/downloaded_packages/ /tmp/*.rds

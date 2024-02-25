@@ -70,12 +70,12 @@ build_rbase:
 	docker image tag rlab-base:${PYTHONBASE} rlab-base:latest
 
 build_rlab:
-	docker build -f Dockerfile.RLab -t rlab:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} .
+	docker build -f Dockerfile.RLab -t rlab:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} .
 	docker image tag rlab:${PYTHONBASE} rlab:latest
 
 pylab:
 	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${IMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${PYPORT} -e ENVVARS=${ENVVARS} -e RCS=${PYRCS} -e USERLAB=${USERLAB} -p ${PYPORT}:${PYPORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} -d ${IMAGE}:${PYTHONBASE}
 
 rlab:
-	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${RIMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${RPORT} -e ENVVARS=${ENVVARS}-e RCS=${RRCS} -e USERLAB=${USERLAB} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
+	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${RIMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${RPORT} -e ENVVARS=${ENVVARS} -e RCS=${RRCS} -e USERLAB=${USERLAB} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
 

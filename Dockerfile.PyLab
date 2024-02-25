@@ -1,6 +1,7 @@
 ARG PYTHONBASE
 FROM pyrlab-base:${PYTHONBASE}
 
+ARG PYTHONBASE
 ARG PIPPROXY
 ARG PIPHOST
 
@@ -14,24 +15,35 @@ WORKDIR ${HOMEDIR}
 
 SHELL [ "/bin/bash", "-l", "-c" ]
 
-COPY --chown=${USER}:${USER} requirements.txt ./
+COPY --chown=${USER}:${USER} requirements_* ./
 COPY --chown=${USER}:${USER} repositories.yml ./
 
 RUN <<EOT
 #!/usr/bin/env bash
 set -eux
 export PYTHONDONTWRITEBYTECODE=1
-[[ zzz${PIPPROXY} != zzz ]] && export USEPROXY="-i ${PIPPROXY}/root/pypi/+simple --trusted-host ${PIPHOST}"
+[[ zzz${PIPPROXY} != zzz ]] && USEPROXY="-i ${PIPPROXY}/root/pypi/+simple --trusted-host ${PIPHOST}"
+PYTHONMAJOR=`echo ${PYTHONBASE} | cut -d- -f1`
 for package in pip Cython numpy; do
-    pip install --upgrade $package
+    pip install \
+        --upgrade \
+        --default-timeout=300 \
+        --no-warn-script-location \
+        --no-cache-dir \
+        --no-compile \
+        --user \
+        ${USEPROXY} ${package}
 done
-pip install \
-    --default-timeout=300 \
-    --no-warn-script-location \
-    --no-cache-dir \
-    --no-compile \
-    --user \
-    ${USEPROXY} -r requirements.txt
+for reqs in common ${PYTHONMAJOR}; do
+    pip install \
+        --upgrade \
+        --default-timeout=300 \
+        --no-warn-script-location \
+        --no-cache-dir \
+        --no-compile \
+        --user \
+        ${USEPROXY} -r requirements_${reqs}.txt
+done
 EOT
 
 RUN <<EOT

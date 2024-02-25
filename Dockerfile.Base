@@ -24,7 +24,19 @@ RUN <<EOT
 #!/usr/bin/env bash
 set -eux
 export DEBIAN_FRONTEND=noninteractive
-[[ zzz${APTPROXY} != zzz ]] && echo "Acquire::http::proxy \"${APTPROXY}\";" >/etc/apt/apt.conf.d/02proxy
+
+if [[ zzz${APTPROXY} != zzz ]]; then
+    echo "Acquire::http::proxy \"${APTPROXY}\";" >/etc/apt/apt.conf.d/02proxy
+    (
+    cat <<WGETRC
+use_proxy = on
+http_proxy = ${APTPROXY}/
+https_proxy = ${APTPROXY}/
+ftp_proxy = ${APTPROXY}/
+WGETRC
+    ) >/etc/wgetrc
+fi
+
 apt-get update
 apt-get install -y --no-install-recommends `cat base_debs.txt`
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false

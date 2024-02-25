@@ -10,7 +10,7 @@ boto3
 bspline
 chartpy
 chart_studio
-#cohere
+comet_ml
 cufflinks
 cvxpy
 datasets
@@ -28,7 +28,7 @@ gpt4all
 gpytorch
 graphviz
 gsl
-gym
+gymnasium
 h5py
 huggingface_hub
 imageio
@@ -40,7 +40,6 @@ ipywidgets
 jupyter
 jupyter_ai
 jupyterlab
-#jupyterlab-git
 jupyterlab_h5web[full]
 keras
 keras-tuner
@@ -70,9 +69,7 @@ pymc3
 pyramid
 pytest
 python-env-loader
-pytimetk
 pytz
-#qianfan
 quandl
 QuantLib
 QuantStats

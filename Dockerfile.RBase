@@ -1,6 +1,8 @@
 ARG PYTHONBASE
 FROM pyrlab-base:${PYTHONBASE}
 
+ARG PYTHONBASE
+
 ENV LC_ALL=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 
@@ -11,7 +13,8 @@ RUN <<EOT
 set -eux
 export DEBIAN_FRONTEND=noninteractive
 apt-key adv --keyserver keyserver.ubuntu.com --recv-key '95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7'
-echo 'deb http://cloud.r-project.org/bin/linux/debian bullseye-cran40/' >/etc/apt/sources.list.d/cran40.list
+DEBIAN=`echo ${PYTHONBASE} | cut -d- -f2`
+echo "deb http://cloud.r-project.org/bin/linux/debian ${DEBIAN}-cran40/" >/etc/apt/sources.list.d/cran40.list
 apt-get update
 apt-get install -y --no-install-recommends `cat r_debs.txt`
 chown -R ${USER}:${USER} /usr/local/lib/R
