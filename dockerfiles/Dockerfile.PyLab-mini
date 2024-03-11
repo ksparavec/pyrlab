@@ -24,7 +24,7 @@ RUN <<EOT
 #!/usr/bin/env bash
 . init.sh
 pip_install "setuptools pip wheel Cython numpy pyyaml jupyter jupyterlab"
-[[ "zzz${CUDA_INSTALL}" == "zzzyes" ]] && pip_install "nvidia-pyindex" && pip_install "nvidia-cuda-runtime-cu12"
+[[ "zzz${CUDA_INSTALL}" == "zzzyes" ]] && pip_install "nvidia-pyindex" && pip_install "nvidia-cuda-runtime-cu12" || true
 EOT
 
 COPY --chown=${USER}:${USER} --chmod=0755 jupyterlab.sh ./
