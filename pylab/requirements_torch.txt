@@ -1,0 +1,5 @@
+gpytorch
+peft
+torch
+torchvision
+torch_geometric

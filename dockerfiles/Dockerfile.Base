@@ -18,7 +18,7 @@ ENV HOMEDIR=/notebook
 
 SHELL [ "/bin/bash", "-l", "-c" ]
 
-COPY base_debs.txt ./
+COPY base/base_debs.txt ./
 
 RUN <<EOT
 #!/usr/bin/env bash

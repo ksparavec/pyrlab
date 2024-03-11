@@ -12,8 +12,8 @@ USER ${USER}
 
 WORKDIR ${HOMEDIR}
 
-COPY --chown=${USER}:${USER} r_requirements.txt ./
-COPY --chown=${USER}:${USER} r_packages.txt ./
+COPY --chown=${USER}:${USER} rlab/r_requirements.txt ./
+COPY --chown=${USER}:${USER} rlab/r_packages.txt ./
 
 RUN <<EOT
 #!/usr/bin/env bash

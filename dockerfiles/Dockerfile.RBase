@@ -6,7 +6,7 @@ ARG PYTHONBASE
 ENV LC_ALL=en_US.UTF-8
 ENV LANG=en_US.UTF-8
 
-COPY r_debs.txt ./
+COPY rbase/r_debs.txt ./
 
 RUN <<EOT
 #!/usr/bin/env bash

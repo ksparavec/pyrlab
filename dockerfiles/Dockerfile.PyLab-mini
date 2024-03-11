@@ -1,0 +1,33 @@
+ARG PYTHONBASE
+FROM pyrlab-base:${PYTHONBASE}
+
+ARG CUDA_INSTALL
+ARG PYTHONBASE
+ARG PIPPROXY
+ARG PIPHOST
+
+ENV USERLAB=${USERLAB}
+ENV PORT=${PORT}
+ENV RCS=${RCS}
+
+USER ${USER}
+
+WORKDIR ${HOMEDIR}
+
+SHELL [ "/bin/bash", "-l", "-c" ]
+
+COPY --chown=${USER}:${USER} pylab/requirements_* ./
+COPY --chown=${USER}:${USER} pylab/repositories.yml ./
+COPY --chown=${USER}:${USER} lib/* ./
+
+RUN <<EOT
+#!/usr/bin/env bash
+. init.sh
+pip_install "setuptools pip wheel Cython numpy pyyaml jupyter jupyterlab"
+[[ "zzz${CUDA_INSTALL}" == "zzzyes" ]] && pip_install "nvidia-pyindex" && pip_install "nvidia-cuda-runtime-cu12"
+EOT
+
+COPY --chown=${USER}:${USER} --chmod=0755 jupyterlab.sh ./
+
+ENTRYPOINT [ "/usr/bin/tini", "--" ]
+CMD [[ -x /volumes/docker/${USERLAB} ]] && /volumes/docker/${USERLAB} || ${HOMEDIR}/jupyterlab.sh
