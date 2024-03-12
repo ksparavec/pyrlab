@@ -4,7 +4,7 @@ import yaml
 import shutil
 import subprocess
 
-data = yaml.safe_load(open('repositories.yml'))
+data = yaml.safe_load(open('/usr/local/etc/repositories.yml'))
 os.chdir('/tmp')
 for repo in data:
     if repo['enable'] == "yes":

@@ -1,4 +1,4 @@
 - name:    "PRML"
-  enable:  "no"
+  enable:  "yes"
   url:     "https://github.com/ctgk/PRML"
-  command: "python setup.py install --user"
+  command: "pip install --upgrade --prefix=/usr/local --default-timeout=300 --no-warn-script-location --no-cache-dir --no-compile ."

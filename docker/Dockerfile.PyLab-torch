@@ -8,6 +8,6 @@ ARG PIPHOST
 
 RUN <<EOT
 #!/usr/bin/env bash
-. init.sh
-pip_install "-r requirements_torch.txt"
+. /usr/local/sbin/init.sh
+pip_install "-r /usr/local/etc/requirements_torch.txt"
 EOT

@@ -8,7 +8,7 @@ ARG PIPHOST
 
 RUN <<EOT
 #!/usr/bin/env bash
-. init.sh
+. /usr/local/sbin/init.sh
 if [ "zzz${CUDA_INSTALL}" == "zzzyes" ]
 then
     pip_install "jax[cuda12_pip] -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html"

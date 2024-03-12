@@ -16,18 +16,16 @@ WORKDIR ${HOMEDIR}
 
 SHELL [ "/bin/bash", "-l", "-c" ]
 
-COPY --chown=${USER}:${USER} pylab/requirements_* ./
-COPY --chown=${USER}:${USER} pylab/repositories.yml ./
-COPY --chown=${USER}:${USER} lib/* ./
+COPY --chown=root:root --chmod=0644 pylab/* /usr/local/etc
+COPY --chown=root:root --chmod=0755 sbin/* /usr/local/sbin
 
 RUN <<EOT
 #!/usr/bin/env bash
-. init.sh
-pip_install "setuptools pip wheel Cython numpy pyyaml jupyter jupyterlab"
+. /usr/local/sbin/init.sh
+pip_install "setuptools pip wheel"
+pip_install "-r /usr/local/etc/requirements_mini.txt"
 [[ "zzz${CUDA_INSTALL}" == "zzzyes" ]] && pip_install "nvidia-pyindex" && pip_install "nvidia-cuda-runtime-cu12" || true
 EOT
 
-COPY --chown=${USER}:${USER} --chmod=0755 jupyterlab.sh ./
-
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
-CMD [[ -x /volumes/docker/${USERLAB} ]] && /volumes/docker/${USERLAB} || ${HOMEDIR}/jupyterlab.sh
+CMD [[ -x "/notebook/${USERLAB}" ]] && "/notebook/${USERLAB}" || "/usr/local/sbin/jupyterlab.sh"

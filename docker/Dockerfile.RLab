@@ -1,0 +1,35 @@
+ARG PYTHONBASE
+FROM rlab-base:${PYTHONBASE}
+
+ARG PIPPROXY
+ARG PIPHOST
+
+ENV USERLAB=${USERLAB}
+ENV PORT=${PORT}
+ENV RCS=${RCS}
+
+USER ${USER}
+
+WORKDIR ${HOMEDIR}
+
+COPY --chown=root:root --chmod=0644 rlab/* /usr/local/etc
+COPY --chown=root:root --chmod=0755 sbin/* /usr/local/sbin
+
+RUN <<EOT
+#!/usr/bin/env bash
+. /usr/local/sbin/init.sh
+pip_install "-r /usr/local/etc/r_requirements.txt"
+
+command="install.packages(c("
+while read package; do \
+    command=${command}'"'${package}'",'
+done </usr/local/etc/r_packages.txt
+command=$(echo ${command} | sed 's/,$//')
+command=${command}"),Ncpus=8,method='wget')"
+r -e ${command}
+r -e 'IRkernel::installspec()'
+rm -rf /tmp/downloaded_packages/ /tmp/*.rds
+EOT
+
+ENTRYPOINT [ "/usr/bin/tini", "--" ]
+CMD [[ -x "/notebook/${USERLAB}" ]] && "/notebook/${USERLAB}" || "/usr/local/sbin/jupyterlab.sh"

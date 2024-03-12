@@ -4,7 +4,7 @@
 PYTHONBASE := 3.11-bullseye
 
 # Default PyLab image flavor (select from: mini common torch jax)
-PYLAB      := mini
+PYLAB      := torch
 
 # Install CUDA into base image? (optional)
 CUDA_INSTALL := yes
@@ -32,12 +32,12 @@ RRCS       := rlab.sh
 # jupyter lab start
 USERLAB    := userlab.sh
 
-### Notebooks and configuration directory locations on host
+### Notebooks and home directory of notebook user on host
 NOTEBOOKS  := ${HOME}/notebooks
 DOCKER     := ${HOME}/docker
 
 ### Default environment variables definitions in container (optional)
-ENVVARS    := /volumes/docker/.env
+ENVVARS    := /notebook/.env
 
 ### Application proxies (optional)
 # Apt proxy
@@ -50,7 +50,8 @@ PIPHOST    := "172.17.0.1"
 
 all: build pylab rlab
 build: build_base build_rbase build_pylab build_rlab
-.PHONY: all image_clean cache_clean clean build build_base build_rbase build_pylab build_rlab pylab rlab
+build_pylab: build_pylab-mini build_pylab-common build_pylab-torch build_pylab-jax
+.PHONY: all image_clean cache_clean clean build build_base build_rbase build_pylab build_pylab-mini build_pylab-common build_pylab-torch build_pylab-jax build_rlab tag_pylab pylab rlab
 
 image_clean:
 	docker image rm pyrlab-base:${PYTHONBASE} pylab:${PYTHONBASE} rlab-base:${PYTHONBASE} rlab:${PYTHONBASE} pyrlab-base pylab rlab-base rlab pylab-mini:${PYTHONBASE} pylab-mini:latest pylab-common:${PYTHONBASE} pylab-common:latest pylab-torch:${PYTHONBASE} pylab-torch:latest pylab-jax:${PYTHONBASE} pylab-jax:latest
@@ -61,17 +62,23 @@ cache_clean:
 clean: image_clean cache_clean
 
 build_base:
-	docker build -f dockerfiles/Dockerfile.Base -t pyrlab-base:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} --build-arg CUDA_INSTALL=${CUDA_INSTALL} .
+	docker build -f docker/Dockerfile.Base -t pyrlab-base:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg APTPROXY=${APTPROXY} --build-arg CUDA_INSTALL=${CUDA_INSTALL} .
 	docker image tag pyrlab-base:${PYTHONBASE} pyrlab-base:latest
 
-build_pylab:
-	docker build -f dockerfiles/Dockerfile.PyLab-mini -t pylab-mini:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} --build-arg CUDA_INSTALL=${CUDA_INSTALL} .
+build_pylab-mini:
+	docker build -f docker/Dockerfile.PyLab-mini -t pylab-mini:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} --build-arg CUDA_INSTALL=${CUDA_INSTALL} .
 	docker image tag pylab-mini:${PYTHONBASE} pylab-mini:latest
-	docker build -f dockerfiles/Dockerfile.PyLab-common -t pylab-common:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} --build-arg CUDA_INSTALL=${CUDA_INSTALL} .
+
+build_pylab-common:
+	docker build -f docker/Dockerfile.PyLab-common -t pylab-common:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} --build-arg CUDA_INSTALL=${CUDA_INSTALL} .
 	docker image tag pylab-common:${PYTHONBASE} pylab-common:latest
-	docker build -f dockerfiles/Dockerfile.PyLab-torch -t pylab-torch:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} --build-arg CUDA_INSTALL=${CUDA_INSTALL} .
+
+build_pylab-torch:
+	docker build -f docker/Dockerfile.PyLab-torch -t pylab-torch:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} --build-arg CUDA_INSTALL=${CUDA_INSTALL} .
 	docker image tag pylab-torch:${PYTHONBASE} pylab-torch:latest
-	docker build -f dockerfiles/Dockerfile.PyLab-jax -t pylab-jax:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} --build-arg CUDA_INSTALL=${CUDA_INSTALL} .
+
+build_pylab-jax:
+	docker build -f docker/Dockerfile.PyLab-jax -t pylab-jax:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} --build-arg CUDA_INSTALL=${CUDA_INSTALL} .
 	docker image tag pylab-jax:${PYTHONBASE} pylab-jax:latest
 
 tag_pylab:
@@ -80,16 +87,16 @@ tag_pylab:
 	docker images | grep ^pylab
 
 build_rbase:
-	docker build -f dockerfiles/Dockerfile.RBase -t rlab-base:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} .
+	docker build -f docker/Dockerfile.RBase -t rlab-base:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} .
 	docker image tag rlab-base:${PYTHONBASE} rlab-base:latest
 
 build_rlab:
-	docker build -f dockerfiles/Dockerfile.RLab -t rlab:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} .
+	docker build -f docker/Dockerfile.RLab -t rlab:${PYTHONBASE} --build-arg PYTHONBASE=${PYTHONBASE} --build-arg PIPPROXY=${PIPPROXY} --build-arg PIPHOST=${PIPHOST} .
 	docker image tag rlab:${PYTHONBASE} rlab:latest
 
 pylab:
-	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${IMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${PYPORT} -e ENVVARS=${ENVVARS} -e RCS=${PYRCS} -e USERLAB=${USERLAB} -p ${PYPORT}:${PYPORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} -d ${IMAGE}:${PYTHONBASE}
+	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${IMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/notebook -e PORT=${PYPORT} -e ENVVARS=${ENVVARS} -e RCS=${PYRCS} -e USERLAB=${USERLAB} -p ${PYPORT}:${PYPORT} -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} -d ${IMAGE}:${PYTHONBASE}
 
 rlab:
-	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${RIMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/volumes/docker -e PORT=${RPORT} -e ENVVARS=${ENVVARS} -e RCS=${RRCS} -e USERLAB=${USERLAB} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
+	docker run -h `hostname` -it --rm ${DOCKER_ARGS} --name ${RIMAGE}_${PYTHONBASE} -v ${NOTEBOOKS}:/volumes/notebooks -v ${DOCKER}:/notebook -e PORT=${RPORT} -e ENVVARS=${ENVVARS} -e RCS=${RRCS} -e USERLAB=${USERLAB} -p ${RPORT}:${RPORT} -d ${RIMAGE}:${PYTHONBASE}
 

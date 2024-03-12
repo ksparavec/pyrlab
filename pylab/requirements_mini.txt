@@ -1,0 +1,7 @@
+Cython
+ipywidgets
+jupyter
+jupyterlab
+#jupyterlab-git
+numpy
+pyyaml
