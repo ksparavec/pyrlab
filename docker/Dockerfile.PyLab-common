@@ -10,6 +10,16 @@ RUN <<EOT
 #!/usr/bin/env bash
 . /usr/local/sbin/init.sh
 pip_install "-r /usr/local/etc/requirements_common.txt"
+EOT
+
+RUN <<EOT
+#!/usr/bin/env bash
+. /usr/local/sbin/init.sh
 pip_install "-r /usr/local/etc/requirements_${PYTHONMAJOR}.txt"
-sudo python /usr/local/sbin/repos.py
+EOT
+
+RUN <<EOT
+#!/usr/bin/env bash
+. /usr/local/sbin/init.sh
+pip_install "-r /usr/local/etc/requirements_repos.txt"
 EOT

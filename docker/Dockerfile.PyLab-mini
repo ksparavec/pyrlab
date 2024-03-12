@@ -24,6 +24,11 @@ RUN <<EOT
 . /usr/local/sbin/init.sh
 pip_install "setuptools pip wheel"
 pip_install "-r /usr/local/etc/requirements_mini.txt"
+EOT
+
+RUN <<EOT
+#!/usr/bin/env bash
+. /usr/local/sbin/init.sh
 [[ "zzz${CUDA_INSTALL}" == "zzzyes" ]] && pip_install "nvidia-pyindex" && pip_install "nvidia-cuda-runtime-cu12" || true
 EOT
 

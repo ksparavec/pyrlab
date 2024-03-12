@@ -19,7 +19,11 @@ RUN <<EOT
 #!/usr/bin/env bash
 . /usr/local/sbin/init.sh
 pip_install "-r /usr/local/etc/r_requirements.txt"
+EOT
 
+RUN <<EOT
+#!/usr/bin/env bash
+. /usr/local/sbin/init.sh
 command="install.packages(c("
 while read package; do \
     command=${command}'"'${package}'",'

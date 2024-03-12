@@ -7,6 +7,7 @@ PYTHONMAJOR=`echo ${PYTHONBASE} | cut -d- -f1`
 pip_install()
 {
   sudo pip install \
+    -qq \
     --upgrade \
     --prefix="/usr/local" \
     --default-timeout=300 \

@@ -1,0 +1,9 @@
+- name:    "PRML"
+  enable:  "yes"
+  url:     "https://github.com/ctgk/PRML"
+  command: "pip install -qq --upgrade --prefix=/usr/local --default-timeout=300 --no-warn-script-location --no-cache-dir --no-compile ."
+
+- name:    "DX Analytics"
+  enable:  "yes"
+  url:     "https://github.com/yhilpisch/dx"
+  command: "pip install -qq --upgrade --prefix=/usr/local --default-timeout=300 --no-warn-script-location --no-cache-dir --no-compile ."
