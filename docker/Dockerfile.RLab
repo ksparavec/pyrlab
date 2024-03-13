@@ -31,7 +31,7 @@ done </usr/local/etc/r_packages.txt
 command=$(echo ${command} | sed 's/,$//')
 command=${command}"),Ncpus=8,method='wget')"
 r -e ${command}
-r -e 'IRkernel::installspec()'
+sudo r -e 'IRkernel::installspec(user = FALSE, sys_prefix = TRUE)'
 rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 EOT
 

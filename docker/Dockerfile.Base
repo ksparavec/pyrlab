@@ -7,6 +7,8 @@ ARG CUDA_INSTALL
 ENV NODE_MAJOR=20
 ENV NODE_URL=http://HTTPS///deb.nodesource.com/node_${NODE_MAJOR}.x
 
+ENV CHROME_URL=http://dl.google.com/linux/chrome/deb/
+
 ENV CUDA_ARCH=x86_64
 ENV CUDA_DEB=debian11
 ENV CUDA_KRP=cuda-keyring_1.1-1_all.deb
@@ -52,7 +54,19 @@ echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] ${NODE_URL} nodistro ma
 apt-get update
 apt-get install -y --no-install-recommends nodejs
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
-rm -rf /var/lib/apt/lists/* /base_debs.txt
+rm -rf /var/lib/apt/lists/*
+EOT
+
+RUN <<EOT
+#!/usr/bin/env bash
+set -eux
+export DEBIAN_FRONTEND=noninteractive
+curl -fSsL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] ${CHROME_URL} stable main" | tee /etc/apt/sources.list.d/google-chrome.list
+apt-get update
+apt-get install -y --no-install-recommends google-chrome-stable
+apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
+rm -rf /var/lib/apt/lists/*
 EOT
 
 RUN <<EOT
@@ -68,7 +82,7 @@ apt-get update
 apt-get install -y --no-install-recommends linux-headers-`uname -r`
 apt-get install -y --no-install-recommends cuda
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
-rm -rf /var/lib/apt/lists/* /base_debs.txt
+rm -rf /var/lib/apt/lists/*
 EOT
 
 RUN <<EOT

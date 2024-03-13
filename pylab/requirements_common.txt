@@ -50,6 +50,7 @@ mkl
 mlflow
 nbformat
 networkx
+nltk
 nodejs-bin
 notebook
 numexpr
@@ -75,6 +76,7 @@ requests
 scikit-learn
 scipy
 seaborn
+selenium
 shap
 statsmodels
 sympy
@@ -91,6 +93,7 @@ trax
 tushare
 utils
 wandb
+webdriver_manager
 xgboost
 xlrd
 yfinance
