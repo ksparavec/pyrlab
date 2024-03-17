@@ -4,7 +4,7 @@
 
 2. **Linux or macOS software platform.** Both bare metal and VM based platforms are fine. If using a VM, make sure to use latest virtio storage driver and configure VM virtual disk on flash-based storage. Docker PyrLab containers might run on Windows as well, however, this has not been tested or documented. Therefore Windows as platform is not recommended unless you are well experienced with Docker on Windows and you know how to deal with possible issues. On the other hand, running JupyterLab sessions in browser on MS Windows, served from remote Linux/Mac server system, is supported. See [Remote document](Remote.md) for more information how to configure appropriate proxy on server to enable remote JupyterLab access.
 
-3. **Docker Engine, Make and Git** installed on your host platform OS. You are advised to install Docker distribution from docker.io. Instructions how to do this in a way that you get automatic updates are available [here][1]. If you are a developer, then both Make and Git are probably already installed on your system and chances are that you know how to use them. If not, just use your OS package management tool to install them. If you are not familiar with Git and/or Make, find yourself some time to learn how to use them. It will be worthwhile to you. There has also been done some work to support building and running containers with Docker Compose instead of Make, but this work is still just in experimental phase.
+3. **Docker Engine, Make and Git** installed on your host platform OS. You are advised to install Docker distribution from docker.io. Instructions how to do this in a way that you get automatic updates are available on [Docker portal][1]. If you are a developer, then both Make and Git are probably already installed on your system and chances are that you know how to use them. If not, just use your OS package management tool to install them. If you are not familiar with Git and/or Make, find yourself some time to learn how to use them. It will be worthwhile to you. There has also been done some work to support building and running containers with Docker Compose instead of Make, but this work is still just in experimental phase.
 
 4. **Internet connection with low latency, high bandwidth and flat traffic rate.** Be aware that you will be downloading several GBs of data during each build cycle unless you use proxies. Apt proxy and Pip proxy are currently directly supported and configured in default configuration. See [Proxy document](Proxy.md) for more details. Building process within organizations will probably require usage of proxies for regulatory and security reasons.
 
@@ -169,5 +169,5 @@ See [Imaging document](Images.md) for more detailed information on image flavors
 If you run your container on remote server, some additional setup is needed to be able to access it from remote client machine. See [Remote document](Remote.md) for more details.
 
 
-[1]: <https:/docs.docker.com/engine/install/> (Install Docker Engine)
+[1]: <https://docs.docker.com/engine/install/> (Install Docker Engine)
 
