@@ -4,11 +4,10 @@ FROM pylab-common:${PYTHONBASE}
 ARG CUDA_INSTALL
 ARG PYTHONBASE
 ARG PIPPROXY
-ARG PIPHOST
 
 RUN <<EOT
 #!/usr/bin/env bash
-. /usr/local/sbin/init.sh
+. /usr/local/sbin/init_lab.sh
 if [ "zzz${CUDA_INSTALL}" == "zzzyes" ]
 then
     pip_install "jax[cuda12_pip] -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html"

@@ -42,9 +42,10 @@ ENVVARS    := /notebook/.env
 ### Application proxies (optional)
 # Apt proxy
 APTPROXY   := "http://172.17.0.1:3142"
+# Does Apt proxy support HTTPS/// style URLs i.e. caching over https
+APTHTTPS   := "yes"
 # Pip proxy
 PIPPROXY   := "http://172.17.0.1:3141"
-PIPHOST    := "172.17.0.1"
 
 ### End of configuration section
 
@@ -83,6 +84,7 @@ build_base:
     -t pyrlab-base:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg APTPROXY=${APTPROXY} \
+    --build-arg APTHTTPS=${APTHTTPS} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
     .
 	docker image tag pyrlab-base:${PYTHONBASE} pyrlab-base:latest
@@ -93,7 +95,6 @@ build_pylab-mini:
     -t pylab-mini:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
-    --build-arg PIPHOST=${PIPHOST} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
     .
 	docker image tag pylab-mini:${PYTHONBASE} pylab-mini:latest
@@ -104,7 +105,6 @@ build_pylab-common:
     -t pylab-common:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
-    --build-arg PIPHOST=${PIPHOST} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
     .
 	docker image tag pylab-common:${PYTHONBASE} pylab-common:latest
@@ -115,7 +115,6 @@ build_pylab-torch:
     -t pylab-torch:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
-    --build-arg PIPHOST=${PIPHOST} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
     .
 	docker image tag pylab-torch:${PYTHONBASE} pylab-torch:latest
@@ -126,7 +125,6 @@ build_pylab-jax:
     -t pylab-jax:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
-    --build-arg PIPHOST=${PIPHOST} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
     .
 	docker image tag pylab-jax:${PYTHONBASE} pylab-jax:latest
@@ -150,7 +148,6 @@ build_rlab:
     -t rlab:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
-    --build-arg PIPHOST=${PIPHOST} \
     .
 	docker image tag rlab:${PYTHONBASE} rlab:latest
 

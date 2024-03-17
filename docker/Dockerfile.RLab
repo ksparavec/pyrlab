@@ -2,7 +2,6 @@ ARG PYTHONBASE
 FROM rlab-base:${PYTHONBASE}
 
 ARG PIPPROXY
-ARG PIPHOST
 
 ENV USERLAB=${USERLAB}
 ENV PORT=${PORT}
@@ -13,17 +12,16 @@ USER ${USER}
 WORKDIR ${HOMEDIR}
 
 COPY --chown=root:root --chmod=0644 rlab/* /usr/local/etc
-COPY --chown=root:root --chmod=0755 sbin/* /usr/local/sbin
 
 RUN <<EOT
 #!/usr/bin/env bash
-. /usr/local/sbin/init.sh
+. /usr/local/sbin/init_lab.sh
 pip_install "-r /usr/local/etc/r_requirements.txt"
 EOT
 
 RUN <<EOT
 #!/usr/bin/env bash
-. /usr/local/sbin/init.sh
+. /usr/local/sbin/init_lab.sh
 command="install.packages(c("
 while read package; do \
     command=${command}'"'${package}'",'

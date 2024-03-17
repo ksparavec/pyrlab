@@ -4,7 +4,6 @@ FROM pyrlab-base:${PYTHONBASE}
 ARG CUDA_INSTALL
 ARG PYTHONBASE
 ARG PIPPROXY
-ARG PIPHOST
 
 ENV USERLAB=${USERLAB}
 ENV PORT=${PORT}
@@ -17,18 +16,17 @@ WORKDIR ${HOMEDIR}
 SHELL [ "/bin/bash", "-l", "-c" ]
 
 COPY --chown=root:root --chmod=0644 pylab/* /usr/local/etc
-COPY --chown=root:root --chmod=0755 sbin/* /usr/local/sbin
 
 RUN <<EOT
 #!/usr/bin/env bash
-. /usr/local/sbin/init.sh
+. /usr/local/sbin/init_lab.sh
 pip_install "setuptools pip wheel"
 pip_install "-r /usr/local/etc/requirements_mini.txt"
 EOT
 
 RUN <<EOT
 #!/usr/bin/env bash
-. /usr/local/sbin/init.sh
+. /usr/local/sbin/init_lab.sh
 [[ "zzz${CUDA_INSTALL}" == "zzzyes" ]] && pip_install "nvidia-pyindex" && pip_install "nvidia-cuda-runtime-cu12" || true
 EOT
 

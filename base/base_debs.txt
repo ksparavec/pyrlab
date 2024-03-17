@@ -11,6 +11,7 @@ jq
 less
 libcurl4-openssl-dev
 libopenblas0-pthread
+libregexp-common-net-cidr-perl
 libssl-dev
 libzmq3-dev
 locales
