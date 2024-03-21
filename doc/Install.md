@@ -23,7 +23,7 @@ $ git clone https://github.com/ksparavec/pyrlab.git
 
 If you are a developer, it is recommended to fork the repository first, and then clone your own forked version. This way you can make modifications and push them back to your own GitHub repository. If you have some interesting contributions you would like to share, do not hesitate to open a pull request.
 
-##### 2. Change your working directory into `pyrlab` directory and edit configuration section parameters in `Makefile`:
+##### 2. Change your working directory into `pyrlab` directory and edit configuration section parameters in `akefile`:
 
 ```
 ### Start of configuration section
@@ -47,7 +47,7 @@ See [Configuration document](Configuration.md) for more information on each conf
 $ make build
 ```
 
-If you are building multiple images with different parameters, you don't need to modify `Makefile` before each build cycle. For example, if you want to build images with different base version of Python and without CUDA support, you can use provided `Makefile` as is and override relevant parameter values in CLI like this:
+If you are building multiple images with different parameters, you don't need to modify `Configuration.mk` before each build cycle. For example, if you want to build images with different base version of Python and without CUDA support, you can use provided `Configuration.mk` as is and override relevant parameter values in CLI like this:
 
 ```
 $ make build PYTHONBASE=3.8-bullseye CUDA_INSTALL=no DOCKER_ARGS=
@@ -57,10 +57,16 @@ About 15-30 minutes later (depending on how fast/slow your hardware and Internet
 
 If you are interested in details how exactly images are built, where does each software component get installed and why, see [Architecture document](Architecture.md).
 
+You can follow detailed trace of all actions performed during build process in the log file. Its name has to be provided in `Configuration.mk` as `BUILD_LOG` parameter. During build process, just execute `tail` command as suggested before each `docker build` command. For example:
+
+```
+$ tail -f '/tmp/pyrlab_2024-03-21_10:16:45.log'
+```
+
 
 ## Persistent storage configuration
 
-Before running the container, you must prepare two separate directories on your host. In default `Makefile` configuration, following two parameters are set as:
+Before running the container, you must prepare two separate directories on your host. In default configuration, following two parameters are set as:
 
 ```
 NOTEBOOKS  := ${HOME}/notebooks
@@ -78,7 +84,7 @@ You are strongly advised to initialize Git repository immediately in `notebooks`
 
 N.B. There is JupyterLab Git extension that supports basic Git operations from JupyterLab GUI. If you want to use it, just uncomment the appropriate line in `requirements_mini.txt` and `r_requirements.txt` for Python and R kernels, respectively. Be aware though, that extension tends to hog the browser session in regular short time intervals, therefore after some experimenting, I commented it out in configuration files. However, YMMV. See [Configuration document](Configuration.md) for more details.
 
-`docker` directory should be populated with initial bash configuration files. You can simply copy your own `.bashrc` and `.profile`, and start from there. It is advisable to define all environment variables in separate special configuration file referenced by `ENVVARS` parameter in `Makefile` configuration section. If left unchanged, file shall be called `.env` and stored in the home directory of `notebook` user in container. It must have the syntax like in this (rather lengthy) example:
+`docker` directory should be populated with initial bash configuration files. You can simply copy your own `.bashrc` and `.profile`, and start from there. It is advisable to define all environment variables in separate special configuration file referenced by `ENVVARS` parameter in `Configuration.mk`. If left unchanged, file shall be called `.env` and stored in the home directory of `notebook` user in container. It must have the syntax like in this (rather lengthy) example:
 
 ```
 GIT_COMPLETION_SHOW_ALL_COMMANDS=1
@@ -156,13 +162,13 @@ Finally, you can run your container:
 $ make pylab
 ```
 
-In case that you have overriden some `Makefile` parameters during build process, you need to use same parameters here as well. Corresponding to the example above:
+In case that you have overriden some of the parameters in `Configuration.mk` during build process, you need to use same parameters here. Corresponding to the example above:
 
 ```
 $ make pylab PYTHONBASE=3.8-bullseye CUDA_INSTALL=no DOCKER_ARGS=
 ```
 
-Now point your browser to `http://127.0.0.1:8888/lab` (if you changed the listener port in `Makefile`, change it here as well).
+Now point your browser to `http://127.0.0.1:8888/lab` (if you changed the listener port in `Configuration.mk`, change it here as well).
 
 See [Imaging document](Images.md) for more detailed information on image flavors.
 

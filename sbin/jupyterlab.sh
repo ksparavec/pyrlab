@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -eux
 
-[[ -r ${ENVVARS} ]] && set -a && . ${ENVVARS} && set +a || true
+[[ zzz${ENVVARS} != zzz && -r ${ENVVARS} ]] && set -a && . ${ENVVARS} && set +a || true
 
-[[ -x ${RCS} ]] && ./${RCS} || true
+[[ zzz${RCS} != zzz && -x ${RCS} ]] && ./${RCS} || true
 
 export PATH=${HOME}/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 [[ -d /usr/local/cuda/bin ]] && export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}

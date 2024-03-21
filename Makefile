@@ -1,53 +1,4 @@
-### Start of configuration section
-
-# Base Python image tag (see https://hub.docker.com/_/python)
-PYTHONBASE := 3.11-bullseye
-
-# Default PyLab image flavor (select from: mini common torch jax)
-PYLAB      := torch
-
-# Install CUDA into base image? (optional)
-CUDA_INSTALL := yes
-DOCKER_ARGS  := --runtime=nvidia --gpus all
-
-### Custom built image names
-IMAGE      := pylab
-RIMAGE     := rlab
-
-### Default container ports
-# pylab
-PYPORT     := 8888
-# D-Tale
-DTPORT     := 40000
-# tensorboard
-TFPORT     := 6006
-# rlab
-RPORT      := 9999
-
-### Default user scripts (optional)
-# pylab rc
-PYRCS      := pylab.sh
-# rlab rc
-RRCS       := rlab.sh
-# jupyter lab start
-USERLAB    := userlab.sh
-
-### Notebooks and home directory of notebook user on host
-NOTEBOOKS  := ${HOME}/notebooks
-DOCKER     := ${HOME}/docker
-
-### Default environment variables definitions in container (optional)
-ENVVARS    := /notebook/.env
-
-### Application proxies (optional)
-# Apt proxy
-APTPROXY   := "http://172.17.0.1:3142"
-# Does Apt proxy support HTTPS/// style URLs i.e. caching over https
-APTHTTPS   := "yes"
-# Pip proxy
-PIPPROXY   := "http://172.17.0.1:3141"
-
-### End of configuration section
+include Configuration.mk
 
 all: build pylab rlab
 build: build_base build_rbase build_pylab build_rlab
@@ -79,6 +30,7 @@ cache_clean:
 clean: image_clean cache_clean
 
 build_base:
+	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
 	docker build \
     -f docker/Dockerfile.Base \
     -t pyrlab-base:${PYTHONBASE} \
@@ -86,47 +38,51 @@ build_base:
     --build-arg APTPROXY=${APTPROXY} \
     --build-arg APTHTTPS=${APTHTTPS} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
-    .
+    . >>${BUILD_LOG} 2>&1
 	docker image tag pyrlab-base:${PYTHONBASE} pyrlab-base:latest
 
 build_pylab-mini:
+	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
 	docker build \
     -f docker/Dockerfile.PyLab-mini \
     -t pylab-mini:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
-    .
+    . >>${BUILD_LOG} 2>&1
 	docker image tag pylab-mini:${PYTHONBASE} pylab-mini:latest
 
 build_pylab-common:
+	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
 	docker build \
     -f docker/Dockerfile.PyLab-common \
     -t pylab-common:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
-    .
+    . >>${BUILD_LOG} 2>&1
 	docker image tag pylab-common:${PYTHONBASE} pylab-common:latest
 
 build_pylab-torch:
+	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
 	docker build \
     -f docker/Dockerfile.PyLab-torch \
     -t pylab-torch:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
-    .
+    . >>${BUILD_LOG} 2>&1
 	docker image tag pylab-torch:${PYTHONBASE} pylab-torch:latest
 
 build_pylab-jax:
+	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
 	docker build \
     -f docker/Dockerfile.PyLab-jax \
     -t pylab-jax:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
-    .
+    . >>${BUILD_LOG} 2>&1
 	docker image tag pylab-jax:${PYTHONBASE} pylab-jax:latest
 
 tag_pylab:
@@ -135,20 +91,22 @@ tag_pylab:
 	docker images | grep ^pylab
 
 build_rbase:
+	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
 	docker build \
     -f docker/Dockerfile.RBase \
     -t rlab-base:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
-    .
+    . >>${BUILD_LOG} 2>&1
 	docker image tag rlab-base:${PYTHONBASE} rlab-base:latest
 
 build_rlab:
+	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
 	docker build \
     -f docker/Dockerfile.RLab \
     -t rlab:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
-    .
+    . >>${BUILD_LOG} 2>&1
 	docker image tag rlab:${PYTHONBASE} rlab:latest
 
 pylab:
@@ -159,7 +117,7 @@ pylab:
     --rm \
     --hostname "pylab-"`hostname` \
     --cap-add=SYS_ADMIN \
-    --name ${IMAGE}_${PYTHONBASE} \
+    --name $@_${PYTHONBASE} \
     ${DOCKER_ARGS} \
     -v ${NOTEBOOKS}:/volumes/notebooks \
     -v ${DOCKER}:/notebook \
@@ -169,7 +127,7 @@ pylab:
     -e PORT=${PYPORT} -p ${PYPORT}:${PYPORT} \
     -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} \
     -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} \
-    -d ${IMAGE}:${PYTHONBASE}
+    -d $@:${PYTHONBASE}
 
 rlab:
 	docker run \
@@ -178,7 +136,7 @@ rlab:
     --tty \
     --rm \
     --hostname "rlab-"`hostname` \
-    --name ${RIMAGE}_${PYTHONBASE} \
+    --name $@_${PYTHONBASE} \
     ${DOCKER_ARGS} \
     -v ${NOTEBOOKS}:/volumes/notebooks \
     -v ${DOCKER}:/notebook \
@@ -186,4 +144,4 @@ rlab:
     -e RCS=${RRCS} \
     -e USERLAB=${USERLAB} \
     -e PORT=${RPORT} -p ${RPORT}:${RPORT} \
-    -d ${RIMAGE}:${PYTHONBASE}
+    -d $@:${PYTHONBASE}

@@ -2,63 +2,20 @@
 
 There are several places to configure build and run process:
 
-1. `Makefile` configuration block
+1. `Configuration.mk` Makefile configuration file
 2. `base/*.txt`, `rbase/*.txt`, `pylab/*.txt`, `rlab/*.txt` simple text configuration files
 3. `docker/Dockerfile*` headers
 
 
-### Makefile configuration block
+### `Configuration.mk` Makefile configuration file 
 
-This is the most important place to configure build and run process. Full list of configurable parameters:
+This is the most important place to configure build and run process.
 
-```
-# Base Python image tag (see https://hub.docker.com/_/python)
-PYTHONBASE := 3.11-bullseye
+All of parameters have been already commented and should be more or less self-explanatory. Unless you already have listeners running on some of the default ports, there is usually no reason to change them. Same goes for image names, optional default user scripts and environment variables file name.
 
-# Default PyLab image flavor (select from: mini common torch jax)
-PYLAB      := torch
+Some of the more common parameters you may want to customize:
 
-# Install CUDA into base image? (optional)
-CUDA_INSTALL := yes
-DOCKER_ARGS  := --runtime=nvidia --gpus all
-
-### Custom built image names
-IMAGE      := pylab
-RIMAGE     := rlab
-
-### Default container ports
-# pylab
-PYPORT     := 8888
-# D-Tale
-DTPORT     := 40000
-# tensorboard
-TFPORT     := 6006
-# rlab
-RPORT      := 9999
-
-### Default user scripts (optional)
-# pylab rc
-PYRCS      := pylab.sh
-# rlab rc
-RRCS       := rlab.sh
-# jupyter lab start
-USERLAB    := userlab.sh
-
-### Notebooks and home directory of notebook user on host
-NOTEBOOKS  := ${HOME}/notebooks
-DOCKER     := ${HOME}/docker
-
-### Default environment variables definitions in container (optional)
-ENVVARS    := /notebook/.env
-
-### Application proxies (optional)
-# Apt proxy
-APTPROXY   := "http://172.17.0.1:3142"
-# Pip proxy
-PIPPROXY   := "http://172.17.0.1:3141"
-```
-
-Most of parameters have been already commented in `Makefile` itself and/or should be self-explanatory. Unless you already have listeners running on some of the default ports, there is usually no reason to change them. Same goes for image names, optional default user scripts and environment variables file name. Most likely you will want/need to change: See [Install document](Install.md) for details on `ENVVARS` file.
+* `BUILD_LOG`: specify log file (can be in absolute or relative path). You can use output of shell command to create log file name with a timestamp like in provided default configuration.
 
 * `PYTHONBASE`: specify base image. Python images from Docker Hub are good start, but you are free to use any other image that is based on Debian distribution. You may even just use standard Debian Docker image as base image, however, Python version there is rather outdated. You can also use your own image. See [Architecture document](Architecture.md) for the list of requirements in case you decide to go that path. Unless you are image developer, you will probably want to stick with default.
 
@@ -76,6 +33,8 @@ Most of parameters have been already commented in `Makefile` itself and/or shoul
 
 * `PIPPROXY`: PIP proxy URL. See [Proxy document](Proxy.md) for details.
 
+Other parameters for more advanced usage are explained in [Architecture document](Architecture.md) in detail.
+
 
 ### Text configuration files
 
@@ -86,7 +45,7 @@ In general, it is advisable to use modules that have been published to PyPI repo
 
 ### Dockerfile headers
 
-Configuration parameters (`ENV` parameters) in Dockerfiles are unlikely to change often, if at all. On the other hand, you may want to add your own if you decide to extend and/or create new Dockerfiles for new image flavors. It is advisable to keep them tight to the image where they are used. Some of the global parameters defined in `Makefile` are propagated into Dockerfiles as well.
+Configuration parameters (`ENV` parameters) in Dockerfiles are unlikely to change often, if at all. On the other hand, you may want to add your own if you decide to extend and/or create new Dockerfiles for new image flavors. It is advisable to keep them tight to the image where they are used. Some of the global parameters defined in `Configuration.mk` are propagated into Dockerfiles as well.
 
 See also [Architecture document](Architecture.md) for more information on Dockerfile headers.
 

@@ -1,4 +1,5 @@
 gpytorch
+huggingface_hub[torch]
 peft
 torch
 torchvision

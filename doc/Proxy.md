@@ -23,21 +23,17 @@ Efficient remote caching of packages from PyPI repositories requires specialized
 There is one simple well-known solution tailored for Python software development: [devpi: PyPI server and packaging/testing/release tool][6]. In order to get it running quickly on your laptop or server, just [follow these steps][7].
 
 
-### Proxy configuration in `Makefile`
+### Proxy configuration in `Configuration.mk`
 
 As already stated in [Configuration document](Configuration.md), there are three parameters related to proxying and caching:
 
 ```
-### Application proxies (optional)
-# Apt proxy
-APTPROXY   := "http://172.17.0.1:3142"
-# Does Apt proxy support HTTPS/// style URLs i.e. caching over https
-APTHTTPS   := "yes"
-# Pip proxy
-PIPPROXY   := "http://172.17.0.1:3141"
+APTPROXY   := http://172.17.0.1:3142
+APTHTTPS   := yes
+PIPPROXY   := http://172.17.0.1:3141
 ```
 
-If you have installed APT-Cacher-NG on your host, its listener will default to port 3142, as shown in example above for `APTPROXY` parameter value. Also, default Docker gateway IP address will be the one shown in example above. If you had to change it for some reason, you need to adjust this in `Makefile` accordingly.
+If you have installed APT-Cacher-NG on your host, its listener will default to port 3142, as shown in example above for `APTPROXY` parameter value. Also, default Docker gateway IP address will be the one shown in example above. If you had to change it for some reason, you need to adjust this in `Configuration.mk` accordingly.
 
 If the proxy server supports HTTPS/// URL scheme like APT-Cacher-NG does, then set `APTHTTPS` to yes, otherwise to no. If set to yes, docker will communicate URL to the proxy server via http instead of https, and proxy will then connect itself to remote repository via https. This way packages get cached on the proxy server.
 
@@ -45,7 +41,7 @@ The IP address in `PIPPROXY` is again Docker gateway IP address. Port 3141 needs
 
 Please note that `devpi` server is tailored for software development and single user only. It is not a general robust software like APT proxies mentioned above. You might need to restart your build process couple of times when building your containers for the first time until `devpi` has cached everything. After that, it usually runs pretty smoothly without issues.
 
-In case you don't want to use proxies at all, just comment these parameters in `Makefile` out.
+In case you don't want to use proxies at all, just comment these parameters in `Configuration.mk` out.
 
 
 ### Note on http transport for fetching packages from remote repositories

@@ -29,7 +29,7 @@ It should be clear from inheritance model and summary table that images are crea
 
 After shebang line, first `/usr/local/sbin/init_lab.sh` gets sourced. It contains code to initialize `pip_install` shell wrapper function. All Python modules are installed with same pip command afterwards. This ensures consistency. With the exception of Jax module, all other Python modules are specified in their respective configuration files listed in table above. For Jax module, distinction must be made between CUDA and non-CUDA versions, therefore this logic is built into Dockerfile itself.
 
-Apart from Dockerfiles and configuration files, there is third place that is relevant to image build process: `Makefile`. All parameters are defined there in configuration section and build commands specified afterwards. See [Configuration document](Configuration.md) for more information on parameters and [Architecture document](Architecture.md) for more information on container build and execution logic.
+Apart from Dockerfiles and configuration files, there is a third place relevant to image build process: `Configuration.mk`. See [Configuration document](Configuration.md) for more information on parameters and [Architecture document](Architecture.md) for more information on container build and execution logic.
 
 Careful reader should now be able to conclude that creating new PyLab Docker images involves three steps:
 

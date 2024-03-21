@@ -1,6 +1,6 @@
 ## NVIDIA GPU hardware support
 
-NVIDIA GPU hardware is explicitly supported in both PyLab and RLab images. Whether support is built into image is controlled via parameter in `Makefile`:
+NVIDIA GPU hardware is explicitly supported in both PyLab and RLab images. Whether support is built into the image is controlled via parameters in `Configuration.mk`:
 
 ```
 CUDA_INSTALL := yes
