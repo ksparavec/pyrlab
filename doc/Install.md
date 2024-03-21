@@ -23,19 +23,30 @@ $ git clone https://github.com/ksparavec/pyrlab.git
 
 If you are a developer, it is recommended to fork the repository first, and then clone your own forked version. This way you can make modifications and push them back to your own GitHub repository. If you have some interesting contributions you would like to share, do not hesitate to open a pull request.
 
-##### 2. Change your working directory into `pyrlab` directory and edit configuration section parameters in `akefile`:
+##### 2. Change your working directory into `pyrlab` directory and edit parameters in `Configuration.mk`:
 
 ```
-### Start of configuration section
+### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ###
+### Parameters marked as MANDATORY must be set to non-empty value  ###
+### Parameters marked as OPTIONAL may be commented out             ###
+### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ###
 
-# Base Python image tag (see https://hub.docker.com/_/python)
+# MANDATORY: Log file (can be absolute or relative path)
+BUILD_LOG  := '/tmp/pyrlab_$(shell date +"%F_%T").log'
+
+# MANDATORY: Base Python image tag (see https://hub.docker.com/_/python)
 PYTHONBASE := 3.11-bullseye
-...
 
-### End of configuration section
+...
 ```
 
-All parameters are set to reasonable default values and in most cases you want to keep them as they are. You may want to use different Python base image, disable CUDA support if you don't have NVIDIA hardware available (in that case set `CUDA_INSTALL` to "no" and `DOCKER_ARGS` to ""). Or change locations of persistent storage for notebooks and Docker user configuration. In case you don't have or don't want to use proxies, just comment `APTPROXY` and `PIPPROXY` out.
+General remarks:
+
+* mandatory parameters *must* be set to some sensible non-empty value, otherwise build process will fail
+* optional parameters can be commented out or left empty
+* parameters are set to reasonable default values and in most cases you want to keep them as they are
+
+You may want to use different Python base image or disable full CUDA support if you don't have NVIDIA hardware available. Also interesting are locations of persistent storage for notebooks and Docker user configuration. In case you don't have or don't want to use proxies, just comment `APTPROXY` and `PIPPROXY` out.
 
 You can also add custom init scripts for pylab or rlab images (see `PYRCS` and `RRCS` parameters and `jupyterlab.sh` script where custom init scripts get called). You can even completely replace default `jupyterlab.sh` startup script with your own version (just redefine `USERLAB` and provide your own startup script). Doing so is recommended only if you are fairly familiar with Docker containers and environments, i.e. you know exactly what you are doing. In most cases, you will want to keep the provided startup script as is.
 
