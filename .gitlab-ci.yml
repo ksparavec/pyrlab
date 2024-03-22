@@ -1,0 +1,15 @@
+stages:
+  - build
+  - deploy
+
+build-job:
+  stage: build
+  script:
+    - make build
+
+deploy-job:
+  stage: deploy
+  script:
+    - make tag_pylab PYLAB=torch
+    - make pylab
+    - make rlab
