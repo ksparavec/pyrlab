@@ -82,7 +82,7 @@ cd /tmp && wget "${CUDA_URL}/${CUDA_DEB}/${CUDA_ARCH}/${CUDA_KRP}" && dpkg -i "$
 CUDA_URL=$(apt_https "${CUDA_URL}")
 echo "deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] ${CUDA_URL}/${CUDA_DEB}/${CUDA_ARCH}/ /" | tee /etc/apt/sources.list.d/cuda-${CUDA_DEB}-${CUDA_ARCH}.list
 apt-get update
-apt-get install -y --no-install-recommends linux-headers-`uname -r`
+apt-get install -y --no-install-recommends linux-headers-amd64
 apt-get install -y --no-install-recommends cuda
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 rm -rf /var/lib/apt/lists/*
