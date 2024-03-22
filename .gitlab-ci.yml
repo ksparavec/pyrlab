@@ -11,5 +11,5 @@ deploy-job:
   stage: deploy
   script:
     - make tag_pylab PYLAB=torch
-    - make pylab
-    - make rlab
+    - make pylab DOCKER_ARGS=
+    - make rlab DOCKER_ARGS=

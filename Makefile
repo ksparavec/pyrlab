@@ -110,6 +110,7 @@ build_rlab:
 	docker image tag rlab:${PYTHONBASE} rlab:latest
 
 pylab:
+	docker stop $@_${PYTHONBASE} || true
 	docker run \
     --detach \
     --interactive \
@@ -130,6 +131,7 @@ pylab:
     -d $@:${PYTHONBASE}
 
 rlab:
+	docker stop $@_${PYTHONBASE} || true
 	docker run \
     --detach \
     --interactive \
