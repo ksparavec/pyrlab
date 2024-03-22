@@ -7,10 +7,6 @@ ENV USERLAB=${USERLAB}
 ENV PORT=${PORT}
 ENV RCS=${RCS}
 
-USER ${USER}
-
-WORKDIR ${HOMEDIR}
-
 COPY --chown=root:root --chmod=0644 rlab/* /usr/local/etc
 
 RUN <<EOT
@@ -29,7 +25,7 @@ done </usr/local/etc/r_packages.txt
 command=$(echo ${command} | sed 's/,$//')
 command=${command}"),Ncpus=8,method='wget')"
 r -e ${command}
-sudo r -e 'IRkernel::installspec(user = FALSE, sys_prefix = TRUE)'
+r -e 'IRkernel::installspec(user = FALSE, sys_prefix = TRUE)'
 rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 EOT
 

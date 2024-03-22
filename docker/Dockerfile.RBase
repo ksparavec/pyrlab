@@ -17,7 +17,6 @@ DEBIAN=`echo ${PYTHONBASE} | cut -d- -f2`
 echo "deb http://cloud.r-project.org/bin/linux/debian ${DEBIAN}-cran40/" >/etc/apt/sources.list.d/cran40.list
 apt-get update
 apt-get install -y --no-install-recommends `cat r_debs.txt`
-chown -R ${USER}:${USER} /usr/local/lib/R
 rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 rm -rf /var/lib/apt/lists/* /r_debs.txt

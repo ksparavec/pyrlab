@@ -122,6 +122,8 @@ pylab:
     ${DOCKER_ARGS} \
     -v ${NOTEBOOKS}:/volumes/notebooks \
     -v ${DOCKER}:/notebook \
+    -e UID=`id -u` \
+    -e GID=`id -g` \
     -e ENVVARS=${ENVVARS} \
     -e RCS=${PYRCS} \
     -e USERLAB=${USERLAB} \
@@ -142,6 +144,8 @@ rlab:
     ${DOCKER_ARGS} \
     -v ${NOTEBOOKS}:/volumes/notebooks \
     -v ${DOCKER}:/notebook \
+    -e UID=`id -u` \
+    -e GID=`id -g` \
     -e ENVVARS=${ENVVARS} \
     -e RCS=${RRCS} \
     -e USERLAB=${USERLAB} \

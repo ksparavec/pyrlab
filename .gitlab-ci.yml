@@ -5,7 +5,7 @@ stages:
 build-job:
   stage: build
   script:
-    - make build
+    - make build CUDA_INSTALL=
 
 deploy-job:
   stage: deploy

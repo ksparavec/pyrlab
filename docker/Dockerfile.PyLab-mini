@@ -9,10 +9,6 @@ ENV USERLAB=${USERLAB}
 ENV PORT=${PORT}
 ENV RCS=${RCS}
 
-USER ${USER}
-
-WORKDIR ${HOMEDIR}
-
 SHELL [ "/bin/bash", "-l", "-c" ]
 
 COPY --chown=root:root --chmod=0644 pylab/* /usr/local/etc
