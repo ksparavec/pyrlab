@@ -4,12 +4,22 @@ stages:
 
 build-job:
   stage: build
+  variables:
+    PYTHONBASE: '3.11-bullseye'
+    CUDA_INSTALL: 'no'
   script:
-    - make build CUDA_INSTALL=
+    - make build PYTHONBASE=$PYTHONBASE CUDA_INSTALL=$CUDA_INSTALL
+    - echo "PYTHONBASE=$PYTHONBASE" >>build.env
+  artifacts:
+    reports:
+      dotenv: build.env
 
 deploy-job:
   stage: deploy
+  variables:
+    PYLAB: 'torch'
+    DOCKER_ARGS: ''
   script:
-    - make tag_pylab PYLAB=torch
-    - make pylab DOCKER_ARGS=
-    - make rlab DOCKER_ARGS=
+    - make tag_pylab PYTHONBASE=$PYTHONBASE PYLAB=$PYLAB
+    - make pylab PYTHONBASE=$PYTHONBASE DOCKER_ARGS=$DOCKER_ARGS
+    - make rlab PYTHONBASE=$PYTHONBASE DOCKER_ARGS=$DOCKER_ARGS

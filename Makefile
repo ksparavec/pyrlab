@@ -111,6 +111,7 @@ build_rlab:
 
 pylab:
 	docker stop $@_${PYTHONBASE} || true
+	sleep 3
 	docker run \
     --detach \
     --interactive \
@@ -134,6 +135,7 @@ pylab:
 
 rlab:
 	docker stop $@_${PYTHONBASE} || true
+	sleep 3
 	docker run \
     --detach \
     --interactive \
