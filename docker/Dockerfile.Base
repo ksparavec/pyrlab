@@ -21,6 +21,7 @@ ENV HOMEDIR=/notebook
 SHELL [ "/bin/bash", "-l", "-c" ]
 
 COPY base/base_debs.txt ./
+COPY --chown=root:root --chmod=0755 sbin/init_base.sh /usr/local/sbin
 
 RUN <<EOT
 #!/usr/bin/env bash
