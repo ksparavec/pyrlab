@@ -1,2 +1,3 @@
 git+https://github.com/ctgk/PRML
 git+https://github.com/yhilpisch/dx
+git+https://github.com/tinygrad/tinygrad.git

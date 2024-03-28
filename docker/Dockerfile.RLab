@@ -8,6 +8,7 @@ ENV PORT=${PORT}
 ENV RCS=${RCS}
 
 COPY --chown=root:root --chmod=0644 rlab/* /usr/local/etc
+COPY --chown=root:root --chmod=0755 sbin/* /usr/local/sbin
 
 RUN <<EOT
 #!/usr/bin/env bash

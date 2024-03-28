@@ -12,6 +12,7 @@ ENV RCS=${RCS}
 SHELL [ "/bin/bash", "-l", "-c" ]
 
 COPY --chown=root:root --chmod=0644 pylab/* /usr/local/etc
+COPY --chown=root:root --chmod=0755 sbin/* /usr/local/sbin
 
 RUN <<EOT
 #!/usr/bin/env bash
