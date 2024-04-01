@@ -1,6 +1,8 @@
 ARG PYTHONBASE
 FROM python:${PYTHONBASE}
 
+ARG UID
+ARG GID
 ARG APTPROXY
 ARG APTHTTPS
 ARG CUDA_INSTALL
@@ -94,4 +96,10 @@ RUN <<EOT
 echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
 locale-gen en_US.utf8
 update-locale LANG=en_US.UTF-8
+echo "Defaults lecture=never" >/etc/sudoers.d/privacy
+chmod 0440 /etc/sudoers.d/privacy
+groupadd -g ${GID} ${USER}
+useradd -u ${UID} -g ${GID} -p '' -M -d ${HOMEDIR} -s /bin/bash ${USER}
+usermod -a -G sudo ${USER}
+mkdir -p /usr/local/lib/R
 EOT

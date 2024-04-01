@@ -5,8 +5,15 @@ ARG CUDA_INSTALL
 ARG PYTHONBASE
 ARG PIPPROXY
 
+USER root
+
 RUN <<EOT
 #!/usr/bin/env bash
 . /usr/local/sbin/init_lab.sh
 pip_install "-r /usr/local/etc/requirements_torch.txt"
 EOT
+
+USER ${USER}
+
+ENTRYPOINT [ "/usr/bin/tini", "--" ]
+CMD [[ -x "/notebook/${USERLAB}" ]] && "/notebook/${USERLAB}" || "/usr/local/sbin/jupyterlab.sh"

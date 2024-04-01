@@ -1,6 +1,6 @@
 accelerate
 ai21
-amazon-codewhisperer-jupyterlab-ext
+#amazon-codewhisperer-jupyterlab-ext
 anthropic
 arch
 arcticdb
@@ -69,6 +69,7 @@ pydot
 pyfolio-reloaded
 pymc3
 pyramid
+py-spy
 pytest
 python-env-loader
 pytz

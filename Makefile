@@ -38,6 +38,8 @@ build_base:
     --build-arg APTPROXY=${APTPROXY} \
     --build-arg APTHTTPS=${APTHTTPS} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
+    --build-arg UID=${UID} \
+    --build-arg GID=${GID} \
     . >>${BUILD_LOG} 2>&1
 	docker image tag pyrlab-base:${PYTHONBASE} pyrlab-base:latest
 
@@ -123,15 +125,13 @@ pylab:
     ${DOCKER_ARGS} \
     -v ${NOTEBOOKS}:/volumes/notebooks \
     -v ${DOCKER}:/notebook \
-    -e UID=`id -u` \
-    -e GID=`id -g` \
     -e ENVVARS=${ENVVARS} \
     -e RCS=${PYRCS} \
     -e USERLAB=${USERLAB} \
     -e PORT=${PYPORT} -p ${PYPORT}:${PYPORT} \
     -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} \
     -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} \
-    -d $@:${PYTHONBASE}
+    $@:${PYTHONBASE}
 
 rlab:
 	docker stop $@_${PYTHONBASE} || true
@@ -146,10 +146,8 @@ rlab:
     ${DOCKER_ARGS} \
     -v ${NOTEBOOKS}:/volumes/notebooks \
     -v ${DOCKER}:/notebook \
-    -e UID=`id -u` \
-    -e GID=`id -g` \
     -e ENVVARS=${ENVVARS} \
     -e RCS=${RRCS} \
     -e USERLAB=${USERLAB} \
     -e PORT=${RPORT} -p ${RPORT}:${RPORT} \
-    -d $@:${PYTHONBASE}
+    $@:${PYTHONBASE}

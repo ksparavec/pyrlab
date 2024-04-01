@@ -4,6 +4,8 @@ FROM pylab-mini:${PYTHONBASE}
 ARG PYTHONBASE
 ARG PIPPROXY
 
+USER root
+
 RUN <<EOT
 #!/usr/bin/env bash
 . /usr/local/sbin/init_lab.sh
@@ -13,6 +15,7 @@ EOT
 RUN <<EOT
 #!/usr/bin/env bash
 . /usr/local/sbin/init_lab.sh
+PYTHONMAJOR=`python -c 'import sys;print("%d.%d" % sys.version_info[0:2])'`
 pip_install "-r /usr/local/etc/requirements_${PYTHONMAJOR}.txt"
 EOT
 
@@ -21,3 +24,8 @@ RUN <<EOT
 . /usr/local/sbin/init_lab.sh
 pip_install "-r /usr/local/etc/requirements_repos.txt"
 EOT
+
+USER ${USER}
+
+ENTRYPOINT [ "/usr/bin/tini", "--" ]
+CMD [[ -x "/notebook/${USERLAB}" ]] && "/notebook/${USERLAB}" || "/usr/local/sbin/jupyterlab.sh"

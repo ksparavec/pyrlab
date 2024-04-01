@@ -5,6 +5,8 @@ ARG CUDA_INSTALL
 ARG PYTHONBASE
 ARG PIPPROXY
 
+USER root
+
 RUN <<EOT
 #!/usr/bin/env bash
 . /usr/local/sbin/init_lab.sh
@@ -15,3 +17,8 @@ else
     pip_install "jax[cpu]"
 fi
 EOT
+
+USER ${USER}
+
+ENTRYPOINT [ "/usr/bin/tini", "--" ]
+CMD [[ -x "/notebook/${USERLAB}" ]] && "/notebook/${USERLAB}" || "/usr/local/sbin/jupyterlab.sh"

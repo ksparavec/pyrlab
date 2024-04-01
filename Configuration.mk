@@ -56,3 +56,7 @@ USERLAB    := userlab.sh
 
 # OPTIONAL: Environment variables definitions to be used in container
 ENVVARS    := /notebook/.env
+
+# MANDATORY: UID and GID of notebook user in container
+UID        := 1000
+GID        := 1000
