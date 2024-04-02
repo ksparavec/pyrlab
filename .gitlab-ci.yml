@@ -7,8 +7,10 @@ build-job:
   variables:
     PYTHONBASE: '3.11-bullseye'
     CUDA_INSTALL: 'no'
+    DUID: '991'
+    DGID: '988'
   script:
-    - make build PYTHONBASE=$PYTHONBASE CUDA_INSTALL=$CUDA_INSTALL
+    - make build PYTHONBASE=$PYTHONBASE CUDA_INSTALL=$CUDA_INSTALL UID=$DUID GID=$DGID
     - echo "PYTHONBASE=$PYTHONBASE" >>build.env
   artifacts:
     reports:
