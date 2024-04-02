@@ -66,8 +66,6 @@ $ make build PYTHONBASE=3.8-bullseye CUDA_INSTALL=no DOCKER_ARGS=
 
 About 15-30 minutes later (depending on how fast/slow your hardware and Internet connection are), and if there were no errors during build process, you will obtain all configured Docker images in your local Docker repository. See [Imaging document](Images.md) for more information on how Docker image configuration is structured, and how to build additional images that are inherited from base images.
 
-If you are interested in details how exactly images are built, where does each software component get installed and why, see [Architecture document](Architecture.md).
-
 You can follow detailed trace of all actions performed during build process in the log file. Its name has to be provided in `Configuration.mk` as `BUILD_LOG` parameter. During build process, just execute `tail` command as suggested before each `docker build` command. For example:
 
 ```

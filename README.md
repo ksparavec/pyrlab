@@ -32,13 +32,13 @@ and point your browser to `http://127.0.0.1:8888/lab`.
 
 ## Available project documentation
 
-* [Installation document](doc/Install.md)
-* [Configuration document](doc/Configuration.md)
-* [Proxy usage document](doc/Proxy.md)
-* [Docker Imaging document](doc/Images.md)
-* [GPU support document](doc/GPU.md)
-* [Remote access document](doc/Remote.md)
-* [Architecture document](doc/Architecture.md) - not yet written.
+* [Installation document](doc/Install.md) - detailed installation procedure
+* [Configuration document](doc/Configuration.md) - details on configuration
+* [Proxy usage document](doc/Proxy.md) - details on usage of proxies
+* [Docker Imaging document](doc/Images.md) - details on image hierarchy and usage
+* [GPU support document](doc/GPU.md) - details on NVIDIA GPU hardware support
+* [Remote access document](doc/Remote.md) - some hints how to use containers remotely
+* [Architecture document](doc/Architecture.md) - details on Dockerfile structure and security considerations
 
 
 ## Why another Python/R build and deployment system?

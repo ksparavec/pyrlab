@@ -17,7 +17,7 @@ Some of the more common parameters you may want to customize:
 
 * `BUILD_LOG`: specify log file (can be in absolute or relative path). You can use output of shell command to create log file name with a timestamp like in provided default configuration.
 
-* `PYTHONBASE`: specify base image. Python images from Docker Hub are good start, but you are free to use any other image that is based on Debian distribution. You may even just use standard Debian Docker image as base image, however, Python version there is rather outdated. You can also use your own image. See [Architecture document](Architecture.md) for the list of requirements in case you decide to go that path. Unless you are image developer, you will probably want to stick with default.
+* `PYTHONBASE`: specify base image. Python images from Docker Hub are used for the purpose of this project.
 
 * `PYLAB`: this is just selector for `pylab` image flavor. You can currently choose between 'mini', 'common', 'torch' and 'jax'. Most complete is 'torch'. You may want to select 'jax' if you need latest jax version with CUDA support. Alternatively you could decide to start with 'mini' version and then build incrementaly your own package list.
 
@@ -33,8 +33,6 @@ Some of the more common parameters you may want to customize:
 
 * `PIPPROXY`: PIP proxy URL. See [Proxy document](Proxy.md) for details.
 
-Other parameters for more advanced usage are explained in [Architecture document](Architecture.md) in detail.
-
 
 ### Text configuration files
 
@@ -47,5 +45,5 @@ In general, it is advisable to use modules that have been published to PyPI repo
 
 Configuration parameters (`ENV` parameters) in Dockerfiles are unlikely to change often, if at all. On the other hand, you may want to add your own if you decide to extend and/or create new Dockerfiles for new image flavors. It is advisable to keep them tight to the image where they are used. Some of the global parameters defined in `Configuration.mk` are propagated into Dockerfiles as well.
 
-See also [Architecture document](Architecture.md) for more information on Dockerfile headers.
+See also [Architecture document](Architecture.md) for more information on Dockerfiles structure.
 
