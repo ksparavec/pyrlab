@@ -1,3 +1,9 @@
+## Release 1.1.1 (Fri 05 Apr 2024 11:19:33 AM CEST)
+
+* separate tensorflow image flavor added
+* important fixes to package dependencies
+* added FAQ document
+
 ## Release 1.1.0 (Tue 02 Apr 2024 04:15:56 PM CEST)
 
 First 1.x series update. List of changes and updates:
