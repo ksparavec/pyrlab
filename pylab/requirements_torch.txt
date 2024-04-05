@@ -1,6 +1,10 @@
+accelerate
+bitsandbytes
 gpytorch
-huggingface_hub[torch]
+huggingface_hub[cli,inference,torch]
+keras
+keras-tuner
+keras-utils
 peft
-torch
-torchvision
 torch_geometric
+trl

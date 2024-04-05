@@ -16,6 +16,7 @@ then
 else
     pip_install "jax[cpu]"
 fi
+pip_install "-r /usr/local/etc/requirements_jax.txt"
 EOT
 
 USER ${USER}

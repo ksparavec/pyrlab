@@ -2,8 +2,8 @@ include Configuration.mk
 
 all: build pylab rlab
 build: build_base build_rbase build_pylab build_rlab
-build_pylab: build_pylab-mini build_pylab-common build_pylab-torch build_pylab-jax
-.PHONY: all image_clean cache_clean clean build build_base build_rbase build_pylab build_pylab-mini build_pylab-common build_pylab-torch build_pylab-jax build_rlab tag_pylab pylab rlab
+build_pylab: build_pylab-mini build_pylab-common build_pylab-tf build_pylab-torch build_pylab-jax
+.PHONY: all image_clean cache_clean clean build build_base build_rbase build_pylab build_pylab-mini build_pylab-common build_pylab-tf build_pylab-torch build_pylab-jax build_rlab tag_pylab pylab rlab
 
 image_clean:
 	docker image rm \
@@ -19,6 +19,8 @@ image_clean:
     pylab-mini:latest \
     pylab-common:${PYTHONBASE} \
     pylab-common:latest \
+    pylab-tf:${PYTHONBASE} \
+    pylab-tf:latest \
     pylab-torch:${PYTHONBASE} \
     pylab-torch:latest \
     pylab-jax:${PYTHONBASE} \
@@ -64,6 +66,17 @@ build_pylab-common:
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
     . >>${BUILD_LOG} 2>&1
 	docker image tag pylab-common:${PYTHONBASE} pylab-common:latest
+
+build_pylab-tf:
+	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
+	docker build \
+    -f docker/Dockerfile.PyLab-tf \
+    -t pylab-tf:${PYTHONBASE} \
+    --build-arg PYTHONBASE=${PYTHONBASE} \
+    --build-arg PIPPROXY=${PIPPROXY} \
+    --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
+    . >>${BUILD_LOG} 2>&1
+	docker image tag pylab-tf:${PYTHONBASE} pylab-tf:latest
 
 build_pylab-torch:
 	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"

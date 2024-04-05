@@ -39,6 +39,7 @@ and point your browser to `http://127.0.0.1:8888/lab`.
 * [GPU support document](doc/GPU.md) - details on NVIDIA GPU hardware support
 * [Remote access document](doc/Remote.md) - some hints how to use containers remotely
 * [Architecture document](doc/Architecture.md) - details on Dockerfile structure and security considerations
+* [FAQ](doc/FAQ.md) - common questions that you might (have) ask(ed) yourself
 
 
 ## Why another Python/R build and deployment system?
