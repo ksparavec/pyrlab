@@ -14,7 +14,7 @@ if [ "zzz${CUDA_INSTALL}" == "zzzyes" ]
 then
     pip_install "tensorflow[and-cuda]==2.15.1"
 else
-    pip_install "tensorflow-cpu"
+    pip_install "tensorflow-cpu==2.15.1"
 fi
 pip_install "-r /usr/local/etc/requirements_tf.txt"
 EOT

@@ -13,7 +13,7 @@ Starting with Release 1.0.0, there is a list of release notes available. See [Re
 
 ## Quick Start
 
-See [Installation document](doc/Install.md) for detailed instructions. In a nutshell, you need Linux or Mac workstation/server with Docker Engine, Make and Git installed. Then execute following command sequence:
+See [Installation document](doc/Install.md) for detailed instructions. In a nutshell, you need Linux or Mac workstation with Docker Engine, Make and Git installed. Then execute following command sequence:
 
 ```
 $ git clone https://github.com/ksparavec/pyrlab.git
@@ -27,7 +27,7 @@ $ mkdir ${HOME}/docker
 $ make pylab
 ```
 
-and point your browser to `http://127.0.0.1:8888/lab`.
+and point your browser to `http://127.0.0.1:8888/lab`. If you have some questions, see [FAQ document](doc/FAQ.md). Reading project documentation in detail is also a great way to find out more.
 
 
 ## Available project documentation
@@ -39,7 +39,7 @@ and point your browser to `http://127.0.0.1:8888/lab`.
 * [GPU support document](doc/GPU.md) - details on NVIDIA GPU hardware support
 * [Remote access document](doc/Remote.md) - some hints how to use containers remotely
 * [Architecture document](doc/Architecture.md) - details on Dockerfile structure and security considerations
-* [FAQ](doc/FAQ.md) - common questions that you might (have) ask(ed) yourself
+* [FAQ document](doc/FAQ.md) - common questions that you might (have) ask(ed) yourself
 
 
 ## Why another Python/R build and deployment system?

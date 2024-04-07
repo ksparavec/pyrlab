@@ -3,7 +3,7 @@ include Configuration.mk
 all: build pylab rlab
 build: build_base build_rbase build_pylab build_rlab
 build_pylab: build_pylab-mini build_pylab-common build_pylab-tf build_pylab-torch build_pylab-jax
-.PHONY: all image_clean cache_clean clean build build_base build_rbase build_pylab build_pylab-mini build_pylab-common build_pylab-tf build_pylab-torch build_pylab-jax build_rlab tag_pylab pylab rlab
+.PHONY: all image_clean cache_clean clean build build_base build_rbase build_pylab build_pylab-mini build_pylab-common build_pylab-tf build_pylab-torch build_pylab-jax build_rlab tag_pylab pylab rlab pylab_stop pylab_start rlab_stop rlab_start
 
 image_clean:
 	docker image rm \
@@ -124,9 +124,7 @@ build_rlab:
     . >>${BUILD_LOG} 2>&1
 	docker image tag rlab:${PYTHONBASE} rlab:latest
 
-pylab:
-	docker stop $@_${PYTHONBASE} || true
-	sleep 3
+pylab_start:
 	docker run \
     --detach \
     --interactive \
@@ -134,7 +132,7 @@ pylab:
     --rm \
     --hostname "pylab-"`hostname` \
     --cap-add=SYS_ADMIN \
-    --name $@_${PYTHONBASE} \
+    --name pylab_${PYTHONBASE}_${PYPORT} \
     ${DOCKER_ARGS} \
     -v ${NOTEBOOKS}:/volumes/notebooks \
     -v ${DOCKER}:/notebook \
@@ -144,18 +142,23 @@ pylab:
     -e PORT=${PYPORT} -p ${PYPORT}:${PYPORT} \
     -e TFPORT=${TFPORT} -p ${TFPORT}:${TFPORT} \
     -e DTPORT=${DTPORT} -p ${DTPORT}:${DTPORT} \
-    $@:${PYTHONBASE}
+    pylab:${PYTHONBASE}
 
-rlab:
-	docker stop $@_${PYTHONBASE} || true
+pylab_stop:
+	docker stop pylab_${PYTHONBASE}_${PYPORT} || true
 	sleep 3
+
+pylab: pylab_start
+pylab_restart: pylab_stop pylab_start
+
+rlab_start:
 	docker run \
     --detach \
     --interactive \
     --tty \
     --rm \
     --hostname "rlab-"`hostname` \
-    --name $@_${PYTHONBASE} \
+    --name rlab_${PYTHONBASE}_${RPORT} \
     ${DOCKER_ARGS} \
     -v ${NOTEBOOKS}:/volumes/notebooks \
     -v ${DOCKER}:/notebook \
@@ -163,4 +166,11 @@ rlab:
     -e RCS=${RRCS} \
     -e USERLAB=${USERLAB} \
     -e PORT=${RPORT} -p ${RPORT}:${RPORT} \
-    $@:${PYTHONBASE}
+    rlab:${PYTHONBASE}
+
+rlab_stop:
+	docker stop rlab_${PYTHONBASE}_${RPORT} || true
+	sleep 3
+
+rlab: rlab_start
+rlab_restart: rlab_stop rlab_start
