@@ -11,7 +11,7 @@ bspline
 chartpy
 chart_studio
 click
-comet_ml
+#comet_ml
 cufflinks
 cvxpy
 datasets
@@ -72,6 +72,11 @@ py-spy
 pytest
 python-env-loader
 pytz
+qiskit[visualization]
+qiskit_aer
+qiskit_algorithms
+qiskit_machine_learning
+qiskit-ibm-runtime
 quandl
 QuantLib
 QuantStats
@@ -90,7 +95,7 @@ thalesians.tsa
 theano
 tqdm
 transformers
-tushare
+#tushare
 utils
 wandb
 webdriver_manager
