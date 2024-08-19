@@ -1,8 +1,7 @@
-ARG PYTHONBASE
+ARG PYTHONBASE=latest
 FROM pylab-common:${PYTHONBASE}
 
 ARG CUDA_INSTALL
-ARG PYTHONBASE
 ARG PIPPROXY
 
 USER root
@@ -12,7 +11,7 @@ RUN <<EOT
 . /usr/local/sbin/init_lab.sh
 if [ "zzz${CUDA_INSTALL}" == "zzzyes" ]
 then
-    pip_install "torch torchvision torchaudio"
+    pip_install "torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124"
 else
     pip_install "torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu"
 fi

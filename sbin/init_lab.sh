@@ -13,6 +13,7 @@ pip_install()
     --prefix="/usr/local" \
     --default-timeout=300 \
     --no-warn-script-location \
+    --root-user-action=ignore \
     --no-cache-dir \
     --no-compile \
     ${USEPROXY} $1

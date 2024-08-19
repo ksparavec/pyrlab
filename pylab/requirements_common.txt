@@ -44,11 +44,14 @@ jupyter_ai
 jupyterlab_h5web[full]
 kaggle
 lamini
+langchain-google-genai
+langchain-openai
 matplotlib
+micrograd
 MiniSom
 missingno
 mkl
-mlflow
+#mlflow
 music21
 nbformat
 networkx
@@ -98,6 +101,7 @@ transformers
 #tushare
 utils
 wandb
+weaviate-client
 webdriver_manager
 xgboost
 xlrd
