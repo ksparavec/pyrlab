@@ -31,6 +31,7 @@ RUN <<EOT
 . /usr/local/sbin/init_base.sh
 export DEBIAN_FRONTEND=noninteractive
 
+sed -i -E '/\bmain\b/s/\bmain\b/main non-free contrib/g' /etc/apt/sources.list
 if [[ zzz${APTPROXY} != zzz ]]; then
     echo "Acquire::http::proxy \"${APTPROXY}\";" >/etc/apt/apt.conf.d/02proxy
     (

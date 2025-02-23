@@ -28,5 +28,6 @@ texlive-plain-generic
 texlive-xetex
 tini
 tree
+ttf-mscorefonts-installer
 vim
 wget
