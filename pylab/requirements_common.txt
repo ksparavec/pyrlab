@@ -51,7 +51,15 @@ kaggle
 lamini
 #langchain-google-genai
 #langchain-openai
+litellm
 llm
+llm-anthropic
+llm-claude-3
+llm-deepseek
+llm-gemini
+llm-openrouter
+llm-perplexity
+llm-python
 matplotlib
 micrograd
 MiniSom
