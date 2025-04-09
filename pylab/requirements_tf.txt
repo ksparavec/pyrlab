@@ -1,4 +1,3 @@
-tensorflow==2.15.1
 huggingface_hub[cli,inference,tensorflow]
 keras
 keras-tuner

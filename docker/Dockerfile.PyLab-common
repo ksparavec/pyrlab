@@ -8,20 +8,15 @@ USER root
 RUN <<EOT
 #!/usr/bin/env bash
 . /usr/local/sbin/init_lab.sh
-pip_install "-r /usr/local/etc/requirements_common.txt"
-EOT
-
-RUN <<EOT
-#!/usr/bin/env bash
-. /usr/local/sbin/init_lab.sh
 PYTHONMAJOR=`python -c 'import sys;print("%d.%d" % sys.version_info[0:2])'`
-pip_install "-r /usr/local/etc/requirements_${PYTHONMAJOR}.txt"
-EOT
-
-RUN <<EOT
-#!/usr/bin/env bash
-. /usr/local/sbin/init_lab.sh
-pip_install "-r /usr/local/etc/requirements_repos.txt"
+REQUIREMENTS="
+requirements_common.txt
+requirements_${PYTHONMAJOR}.txt
+requirements_repos.txt
+"
+for req in ${REQUIREMENTS}; do
+    [[ -r /usr/local/etc/${req} ]] && pip_install "-r /usr/local/etc/${req}"
+done
 EOT
 
 USER ${USER}

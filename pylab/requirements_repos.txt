@@ -1,4 +1,4 @@
 #git+https://github.com/ctgk/PRML
-git+https://github.com/yhilpisch/dx
+#git+https://github.com/yhilpisch/dx
 git+https://github.com/tinygrad/tinygrad.git
-git+https://github.com/stanfordnlp/dspy.git
+#git+https://github.com/stanfordnlp/dspy.git

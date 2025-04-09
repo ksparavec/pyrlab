@@ -7,7 +7,7 @@
 BUILD_LOG  := '/tmp/pyrlab_$(shell date +"%F_%T").log'
 
 # MANDATORY: Base Python image tag (see https://hub.docker.com/_/python)
-PYTHONBASE := 3.11-bullseye
+PYTHONBASE := 3.12-bullseye
 
 # MANDATORY: Default PyLab image flavor (select from: mini common torch jax)
 PYLAB      := torch

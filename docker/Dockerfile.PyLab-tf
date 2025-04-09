@@ -11,9 +11,9 @@ RUN <<EOT
 . /usr/local/sbin/init_lab.sh
 if [ "zzz${CUDA_INSTALL}" == "zzzyes" ]
 then
-    pip_install "tensorflow[and-cuda]==2.15.1"
+    pip_install "tensorflow[and-cuda]"
 else
-    pip_install "tensorflow-cpu==2.15.1"
+    pip_install "tensorflow"
 fi
 pip_install "-r /usr/local/etc/requirements_tf.txt"
 EOT

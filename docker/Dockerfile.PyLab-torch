@@ -11,7 +11,7 @@ RUN <<EOT
 . /usr/local/sbin/init_lab.sh
 if [ "zzz${CUDA_INSTALL}" == "zzzyes" ]
 then
-    pip_install "torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124"
+    pip_install "torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126"
 else
     pip_install "torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu"
 fi

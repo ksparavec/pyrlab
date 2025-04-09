@@ -21,7 +21,7 @@ EOT
 RUN <<EOT
 #!/usr/bin/env bash
 . /usr/local/sbin/init_lab.sh
-[[ "zzz${CUDA_INSTALL}" == "zzzyes" ]] && pip_install "nvidia-pyindex" && pip_install "nvidia-cuda-runtime-cu12" || true
+[[ "zzz${CUDA_INSTALL}" == "zzzyes" ]] && pip_install "nvidia-pyindex" || true
 EOT
 
 USER ${USER}

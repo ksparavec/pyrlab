@@ -11,9 +11,9 @@ RUN <<EOT
 . /usr/local/sbin/init_lab.sh
 if [ "zzz${CUDA_INSTALL}" == "zzzyes" ]
 then
-    pip_install "jax[cuda12_pip] -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html"
+    pip_install "jax[cuda12]"
 else
-    pip_install "jax[cpu]"
+    pip_install "jax"
 fi
 pip_install "-r /usr/local/etc/requirements_jax.txt"
 EOT

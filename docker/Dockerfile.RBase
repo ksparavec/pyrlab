@@ -15,7 +15,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt-key adv --keyserver keyserver.ubuntu.com --recv-key '95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7'
 DEBIAN=`echo ${PYTHONBASE} | cut -d- -f2`
 echo "deb http://cloud.r-project.org/bin/linux/debian ${DEBIAN}-cran40/" >/etc/apt/sources.list.d/cran40.list
-apt-get update
+apt-get --allow-releaseinfo-change update
 apt-get install -y --no-install-recommends `cat r_debs.txt`
 rm -rf /tmp/downloaded_packages/ /tmp/*.rds
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false

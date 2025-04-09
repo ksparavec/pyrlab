@@ -3,6 +3,5 @@ ipywidgets
 jupyter
 jupyterlab
 jupytext
-#jupyterlab-git
 numpy<2
 pyyaml

@@ -1,5 +1,4 @@
 ai21
-aisuite[all]
 anthropic
 arch
 arcticdb
@@ -13,7 +12,7 @@ bspline
 chartpy
 chart_studio
 click
-#comet_ml
+comet_ml
 cufflinks
 cvxpy
 datasets
@@ -49,8 +48,8 @@ jupyterlab_h5web[full]
 jupytext
 kaggle
 lamini
-#langchain-google-genai
-#langchain-openai
+langchain-google-genai
+langchain-openai
 litellm
 llm
 llm-anthropic
@@ -65,7 +64,7 @@ micrograd
 MiniSom
 missingno
 mkl
-#mlflow
+mlflow
 music21
 nbformat
 networkx
@@ -83,7 +82,6 @@ pmdarima
 poetry
 pydot
 pyfolio-reloaded
-pymc3
 pyramid
 py-spy
 pytest
@@ -109,10 +107,10 @@ sympy
 tables
 tabulate
 thalesians.tsa
-theano
+together
 tqdm
 transformers
-#tushare
+tushare
 utils
 wandb
 weaviate-client
