@@ -7,7 +7,7 @@ A. Depends on what features are important to you. See [Architecture document](Ar
 
 **Q. Which version of the project should I install?**
 
-A. In general, it is safe to use the current main branch. I create releases from time to time, but this is more to indicate new major features or important bug fixes.
+A. In general, it is safe to use the current main branch. I create releases from time to time, but this is more to indicate new major features or important bug fixes. The latest stable version is 1.1.1.
 
 
 **Q. Is GitLab support complete?**
@@ -48,11 +48,6 @@ A. See above. Package that requires tensorflow, like trax for instance, can not 
 **Q. But I can see jax library present in tensorflow image. Why is that?**
 
 A. Because trax needs it. However, it does not support GPU and is usually at least one version behind. Therefore, separate jax image exists.
-
-
-**Q. Why did you pin tensorflow version?**
-
-A. Because current tensorflow version does not work with current nvidia toolkit and libraries. As soon as this has been fixed, pin will be removed. Nvidia toolkit and libraries have always higher update priority than application software on top of them.
 
 
 **Q. In default configuration, ports of all PyLab image flavors are the same. Looks like that I can run one flavor only. Could you make it possible to run all container flavors at the same time?**

@@ -17,9 +17,9 @@ Some of the more common parameters you may want to customize:
 
 * `BUILD_LOG`: specify log file (can be in absolute or relative path). You can use output of shell command to create log file name with a timestamp like in provided default configuration.
 
-* `PYTHONBASE`: specify base image. Python images from Docker Hub are used for the purpose of this project.
+* `PYTHONBASE`: specify base image. Python images from Docker Hub are used for the purpose of this project. Default is 3.12-bullseye.
 
-* `PYLAB`: this is just selector for `pylab` image flavor. You can currently choose between 'mini', 'common', 'torch' and 'jax'. Most complete is 'torch'. You may want to select 'jax' if you need latest jax version with CUDA support. Alternatively you could decide to start with 'mini' version and then build incrementaly your own package list.
+* `PYLAB`: this is just selector for `pylab` image flavor. You can currently choose between 'mini', 'common', 'torch', 'tf' and 'jax'. Most complete is 'torch'. You may want to select 'jax' if you need latest jax version with CUDA support. Alternatively you could decide to start with 'mini' version and then build incrementaly your own package list.
 
 * `CUDA_INSTALL`: Whether or not install CUDA support into base image. See [GPU document](GPU.md) for details.
 
@@ -32,6 +32,26 @@ Some of the more common parameters you may want to customize:
 * `APTPROXY`: Apt proxy URL. See [Proxy document](Proxy.md) for details.
 
 * `PIPPROXY`: PIP proxy URL. See [Proxy document](Proxy.md) for details.
+
+* `PYPORT`: Port for JupyterLab in PyLab container (default: 8888)
+
+* `DTPORT`: Port for dtale in PyLab container (default: 40000)
+
+* `TFPORT`: Port for tensorboard in PyLab container (default: 6006)
+
+* `RPORT`: Port for JupyterLab in RLab container (default: 9999)
+
+* `PYRCS`: Optional script to execute in PyLab container before JupyterLab
+
+* `RRCS`: Optional script to execute in RLab container before JupyterLab
+
+* `USERLAB`: Optional script to execute instead of jupyterlab.sh
+
+* `ENVVARS`: Environment variables definitions to be used in container (default: /notebook/.env)
+
+* `UID`: UID of notebook user in container (default: 1000)
+
+* `GID`: GID of notebook user in container (default: 1000)
 
 
 ### Text configuration files

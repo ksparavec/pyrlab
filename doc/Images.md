@@ -1,6 +1,6 @@
 ## Docker image structure
 
-Docker images are created in hierarchical fashion starting from base image. As base image, [current Python image from Docker Hub][1] is used. Current full image inheritance model is shown in figure below (example uses `3.11-bullseye` version).
+Docker images are created in hierarchical fashion starting from base image. As base image, [current Python image from Docker Hub][1] is used. Current full image inheritance model is shown in figure below (example uses `3.12-bullseye` version).
 
 ![Docker image inheritance model!](model.svg)
 

@@ -1,5 +1,41 @@
 ## NVIDIA GPU hardware support
 
+## Host considerations
+
+Before you can use GPU support in containers, you need to ensure your host system is properly configured. Here are the key requirements:
+
+1. **Hardware Requirements**:
+   - NVIDIA GPU with CUDA support
+   - Sufficient system memory (RAM)
+   - Adequate power supply for the GPU
+
+2. **Software Requirements**:
+   - Linux operating system (Ubuntu, Debian, CentOS, etc.)
+   - NVIDIA drivers installed
+   - Docker engine
+   - NVIDIA Container Toolkit
+
+3. **System Configuration**:
+   - The host must have the NVIDIA kernel module loaded
+   - Docker daemon must be configured to use NVIDIA runtime
+   - Proper permissions must be set for GPU access
+
+4. **Performance Considerations**:
+   - Ensure the host has enough CPU resources to feed the GPU
+   - Monitor system temperature and cooling
+   - Consider using a dedicated GPU for container workloads
+
+5. **Security Considerations**:
+   - Only trusted containers should be given GPU access
+   - Monitor GPU usage to prevent resource exhaustion
+   - Consider using GPU isolation features if available
+
+For detailed instructions on setting up your host system, please refer to the NVIDIA documentation:
+* https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html
+* https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/1.14.5/install-guide.html
+
+Please note that if you are a developer without necessary system administration experience or you don't even have administrative access to host, you will definitely need support from your system administration to get this running.
+
 NVIDIA GPU hardware is explicitly supported in both PyLab and RLab images. Whether support is built into the image is controlled via parameters in `Configuration.mk`:
 
 ```
@@ -13,8 +49,7 @@ DOCKER_ARGS  := --runtime=nvidia --gpus all
 ENV CUDA_ARCH=x86_64
 ENV CUDA_DEB=debian11
 ENV CUDA_KRP=cuda-keyring_1.1-1_all.deb
-ENV CUDA_KRP_URL=https://developer.download.nvidia.com/compute/cuda/repos
-ENV CUDA_URL=http://HTTPS///developer.download.nvidia.com/compute/cuda/repos
+ENV CUDA_URL=https://developer.download.nvidia.com/compute/cuda/repos
 ```
 
 Note that https URL appears twice: once to install keyring (without local caching) and then to install the packages (with local caching). See [Proxy document](Proxy.md) for more information on https configuration used with `apt-cache-ng` package. If you want or must use different proxy software, you might need to convert the http URLs with special HTTPS/// syntax back to original https scheme. This generally means no caching support, however, some transparent proxies might do caching. This is usually the case in enterprise environments where forward proxies generate fake certificates signed by local authority on the fly.
@@ -23,8 +58,6 @@ The second parameter above (`DOCKER_ARGS`) is used when starting container with 
 
 * https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html (NVIDIA CUDA Installation Guide for Linux)
 * https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/1.14.5/install-guide.html (Installing the NVIDIA Container Toolkit)
-
-Please note that if you are a developer without necessary system administration experience or you don't even have administrative access to host, you will definitely need support from your system administration to get this running.
 
 Once containers have been built and started, you can check whether you have usable GPU support within container by executing `nvidia-smi` CLI tool:
 
@@ -51,30 +84,13 @@ Thu Mar 14 14:18:07 2024
 +-----------------------------------------------------------------------------------------+
 ```
 
-If you obtain any kind of error instead of output similar to the one shown above, you will need to debug where the issue is. You can try following steps in order:
+If you see similar output, then your GPU is properly configured and ready to use. You can now use GPU-accelerated libraries like TensorFlow, PyTorch, or JAX in your notebooks. Each of these frameworks has its own way of detecting and using GPUs:
 
-1. Restart your container by executing `docker stop <container name>` followed by `make pylab` or `make rlab`. Watch for eventual errors with `docker logs <container name>`
+* TensorFlow: `tf.config.list_physical_devices('GPU')`
+* PyTorch: `torch.cuda.is_available()`
+* JAX: `jax.devices('gpu')`
 
-2. Restart `dockerd` on host by executing `systemctl restart docker.service`. Watch for status and eventual errors with `journalctl _SYSTEMD_UNIT=docker.service`
+Note that some frameworks may require additional configuration or environment variables to work properly with GPUs. For example, TensorFlow may need `TF_FORCE_GPU_ALLOW_GROWTH=true` to prevent memory allocation issues.
 
-3. Make sure that you have NVIDIA support on host by executing `nvidia-smi` on host itself
-
-4. Make sure that you have working NVIDIA native kernel module on host by executing `lsmod` on host:
-
-```
-$ lsmod | grep ^nvidia
-nvidia_uvm           4632576  0
-nvidia_drm             94208  2
-nvidia_modeset       1347584  2 nvidia_drm
-nvidia              54054912  37 nvidia_uvm,nvidia_modeset
-```
-
-If you have professional system administration support, you will probably just do step 1, and if it does not help, leave the rest to it.
-
-Another way to test GPU working in container without building it yourself is downloading Docker container from Docker Hub or from NGC built by NVIDIA engineers:
-
-* https://hub.docker.com/r/nvidia/cuda (NVIDIA CUDA on Docker Hub)
-* https://catalog.ngc.nvidia.com/orgs/nvidia/containers/cuda (NVIDIA CUDA on NGC)
-
-Note that some Python modules have CUDA support builtin. This is especially the case for current versions of TensorFlow and Torch. Both modules will automatically detect GPU and use it if present or fail back to CPU otherwise. Some modules still require specific version installed like Jax for example. See [Imaging document](Image.md) for more information on the last module and how to use it within PyrLab framework.
+Also note that different image flavors (torch, tf, jax) may have different CUDA and cuDNN versions installed, as they are optimized for their respective frameworks. If you need to use multiple frameworks, you may need to use different containers or carefully manage the versions to ensure compatibility.
 
