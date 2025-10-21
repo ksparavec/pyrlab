@@ -100,3 +100,13 @@ useradd -u ${UID} -g ${GID} -p '' -M -d ${HOMEDIR} -s /bin/bash ${USER}
 usermod -a -G sudo ${USER}
 mkdir -p /usr/local/lib/R
 EOT
+
+RUN <<EOT
+#!/usr/bin/env bash
+# Install UV - fast Python package installer
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# Make UV available system-wide
+mv /root/.cargo/bin/uv /usr/local/bin/uv
+# Verify installation
+uv --version
+EOT

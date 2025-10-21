@@ -6,7 +6,7 @@ build_pylab: build_pylab-mini build_pylab-common build_pylab-tf build_pylab-torc
 .PHONY: all image_clean cache_clean clean build build_base build_rbase build_pylab build_pylab-mini build_pylab-common build_pylab-tf build_pylab-torch build_pylab-jax build_rlab tag_pylab pylab rlab pylab_stop pylab_start rlab_stop rlab_start
 
 image_clean:
-	docker image rm \
+	${CONTAINER_RUNTIME} image rm \
     pyrlab-base:${PYTHONBASE} \
     pyrlab-base:latest \
     pylab:${PYTHONBASE} \
@@ -27,13 +27,13 @@ image_clean:
     pylab-jax:latest
 
 cache_clean:
-	docker buildx prune -af
+	${CONTAINER_RUNTIME} buildx prune -af
 
 clean: image_clean cache_clean
 
 build_base:
 	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
-	docker build \
+	${CONTAINER_RUNTIME} build \
     -f docker/Dockerfile.Base \
     -t pyrlab-base:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
@@ -43,89 +43,89 @@ build_base:
     --build-arg UID=${UID} \
     --build-arg GID=${GID} \
     . >>${BUILD_LOG} 2>&1
-	docker image tag pyrlab-base:${PYTHONBASE} pyrlab-base:latest
+	${CONTAINER_RUNTIME} image tag pyrlab-base:${PYTHONBASE} pyrlab-base:latest
 
 build_pylab-mini:
 	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
-	docker build \
+	${CONTAINER_RUNTIME} build \
     -f docker/Dockerfile.PyLab-mini \
     -t pylab-mini:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
     . >>${BUILD_LOG} 2>&1
-	docker image tag pylab-mini:${PYTHONBASE} pylab-mini:latest
+	${CONTAINER_RUNTIME} image tag pylab-mini:${PYTHONBASE} pylab-mini:latest
 
 build_pylab-common:
 	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
-	docker build \
+	${CONTAINER_RUNTIME} build \
     -f docker/Dockerfile.PyLab-common \
     -t pylab-common:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
     . >>${BUILD_LOG} 2>&1
-	docker image tag pylab-common:${PYTHONBASE} pylab-common:latest
+	${CONTAINER_RUNTIME} image tag pylab-common:${PYTHONBASE} pylab-common:latest
 
 build_pylab-tf:
 	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
-	docker build \
+	${CONTAINER_RUNTIME} build \
     -f docker/Dockerfile.PyLab-tf \
     -t pylab-tf:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
     . >>${BUILD_LOG} 2>&1
-	docker image tag pylab-tf:${PYTHONBASE} pylab-tf:latest
+	${CONTAINER_RUNTIME} image tag pylab-tf:${PYTHONBASE} pylab-tf:latest
 
 build_pylab-torch:
 	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
-	docker build \
+	${CONTAINER_RUNTIME} build \
     -f docker/Dockerfile.PyLab-torch \
     -t pylab-torch:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
     . >>${BUILD_LOG} 2>&1
-	docker image tag pylab-torch:${PYTHONBASE} pylab-torch:latest
+	${CONTAINER_RUNTIME} image tag pylab-torch:${PYTHONBASE} pylab-torch:latest
 
 build_pylab-jax:
 	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
-	docker build \
+	${CONTAINER_RUNTIME} build \
     -f docker/Dockerfile.PyLab-jax \
     -t pylab-jax:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
     --build-arg CUDA_INSTALL=${CUDA_INSTALL} \
     . >>${BUILD_LOG} 2>&1
-	docker image tag pylab-jax:${PYTHONBASE} pylab-jax:latest
+	${CONTAINER_RUNTIME} image tag pylab-jax:${PYTHONBASE} pylab-jax:latest
 
 tag_pylab:
-	docker image tag pylab-${PYLAB}:${PYTHONBASE} pylab:${PYTHONBASE}
-	docker image tag pylab:${PYTHONBASE} pylab:latest
-	docker images | grep ^pylab
+	${CONTAINER_RUNTIME} image tag pylab-${PYLAB}:${PYTHONBASE} pylab:${PYTHONBASE}
+	${CONTAINER_RUNTIME} image tag pylab:${PYTHONBASE} pylab:latest
+	${CONTAINER_RUNTIME} images | grep ^pylab
 
 build_rbase:
 	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
-	docker build \
+	${CONTAINER_RUNTIME} build \
     -f docker/Dockerfile.RBase \
     -t rlab-base:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     . >>${BUILD_LOG} 2>&1
-	docker image tag rlab-base:${PYTHONBASE} rlab-base:latest
+	${CONTAINER_RUNTIME} image tag rlab-base:${PYTHONBASE} rlab-base:latest
 
 build_rlab:
 	@printf "\nINFO: execute \"tail -f ${BUILD_LOG}\" in second terminal to follow image building process in detail\n"
-	docker build \
+	${CONTAINER_RUNTIME} build \
     -f docker/Dockerfile.RLab \
     -t rlab:${PYTHONBASE} \
     --build-arg PYTHONBASE=${PYTHONBASE} \
     --build-arg PIPPROXY=${PIPPROXY} \
     . >>${BUILD_LOG} 2>&1
-	docker image tag rlab:${PYTHONBASE} rlab:latest
+	${CONTAINER_RUNTIME} image tag rlab:${PYTHONBASE} rlab:latest
 
 pylab_start:
-	docker run \
+	${CONTAINER_RUNTIME} run \
     --detach \
     --interactive \
     --tty \
@@ -145,14 +145,14 @@ pylab_start:
     pylab:${PYTHONBASE}
 
 pylab_stop:
-	docker stop pylab_${PYTHONBASE}_${PYPORT} || true
+	${CONTAINER_RUNTIME} stop pylab_${PYTHONBASE}_${PYPORT} || true
 	sleep 3
 
 pylab: pylab_start
 pylab_restart: pylab_stop pylab_start
 
 rlab_start:
-	docker run \
+	${CONTAINER_RUNTIME} run \
     --detach \
     --interactive \
     --tty \
@@ -169,7 +169,7 @@ rlab_start:
     rlab:${PYTHONBASE}
 
 rlab_stop:
-	docker stop rlab_${PYTHONBASE}_${RPORT} || true
+	${CONTAINER_RUNTIME} stop rlab_${PYTHONBASE}_${RPORT} || true
 	sleep 3
 
 rlab: rlab_start

@@ -24,13 +24,17 @@ CUDA_INSTALL := yes
 # OPTIONAL: docker runtime arguments (see GPU document)
 DOCKER_ARGS  := --runtime=nvidia --gpus all
 
+# OPTIONAL: Container runtime (select from: docker podman)
+CONTAINER_RUNTIME := docker
+
 # OPTIONAL: Apt proxy URL (see Proxy document)
 APTPROXY   := http://172.17.0.1:3142
 
 # OPTIONAL: Does Apt proxy support HTTPS/// style URLs (see Proxy document)
 APTHTTPS   := yes
 
-# OPTIONAL: Pip proxy URL (see Proxy document)
+# OPTIONAL: Python package proxy URL (see Proxy document)
+# NOTE: PyRLab uses UV (https://github.com/astral-sh/uv) instead of pip for faster package installation
 PIPPROXY   := http://172.17.0.1:3141
 
 # MANDATORY: pylab container port

@@ -37,6 +37,8 @@ and point your browser to `http://127.0.0.1:8888/lab`. If you have some question
 * [Proxy usage document](doc/Proxy.md) - details on usage of proxies
 * [Docker Imaging document](doc/Images.md) - details on image hierarchy and usage
 * [GPU support document](doc/GPU.md) - details on NVIDIA GPU hardware support
+* [UV package manager](doc/UV.md) - fast Python package installation with UV
+* [Podman support](doc/Podman.md) - using Podman as Docker alternative
 * [Remote access document](doc/Remote.md) - some hints how to use containers remotely
 * [Architecture document](doc/Architecture.md) - details on Dockerfile structure and security considerations
 * [FAQ document](doc/FAQ.md) - common questions that you might (have) ask(ed) yourself

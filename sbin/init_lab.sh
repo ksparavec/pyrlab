@@ -3,18 +3,24 @@ set -eux
 export PYTHONDONTWRITEBYTECODE=1
 PIPHOST=`echo ${PIPPROXY} | perl -MRegexp::Common -nE 'say $1 if /($RE{net}{IPv4})/'`
 USEPROXY=""
-[[ zzz${PIPPROXY} != zzz ]] && USEPROXY="-i ${PIPPROXY}/root/pypi/+simple --trusted-host ${PIPHOST}"
+[[ zzz${PIPPROXY} != zzz ]] && USEPROXY="--index-url ${PIPPROXY}/root/pypi/+simple --trusted-host ${PIPHOST}"
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 pip_install()
 {
-  pip install \
+  # If package string contains --index-url, don't use proxy index (custom index takes precedence)
+  local proxy_args="${USEPROXY}"
+  if [[ "$1" == *"--index-url"* ]]; then
+    proxy_args=""
+  fi
+
+  uv pip install \
     --upgrade \
     --prefix="/usr/local" \
     --default-timeout=300 \
     --no-warn-script-location \
-    --root-user-action=ignore \
     --no-cache-dir \
-    --no-compile \
-    ${USEPROXY} $1
+    --compile-bytecode \
+    --system \
+    ${proxy_args} $1
 }
