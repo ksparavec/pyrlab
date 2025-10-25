@@ -106,6 +106,7 @@ statsmodels
 sympy
 tables
 tabulate
+tavily-python
 thalesians.tsa
 together
 tqdm
